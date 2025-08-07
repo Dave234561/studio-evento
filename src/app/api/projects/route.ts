@@ -1,14 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import prisma from '@/lib/prisma'
 import { generateId } from '@/lib/utils'
 
-// Configuration pour Vercel/Next.js build - Force mode dynamique
+// Importation conditionnelle de Prisma pour éviter les problèmes de build
+const getPrisma = () => {
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return null
+  }
+  return require('@/lib/prisma').default
+}
+
+// Configuration pour Vercel/Next.js build - Mode dynamique obligatoire
 export const dynamic = 'force-dynamic'
-export const fetchCache = 'force-no-store'
-export const revalidate = false
-export const dynamicParams = true
+export const fetchCache = 'force-no-store' 
+export const revalidate = 0
 export const runtime = 'nodejs'
+
+// Configuration alternative pour Next.js App Router
+export const preferredRegion = 'auto'
+export const maxDuration = 30
 
 const createProjectSchema = z.object({
   title: z.string().min(1).max(200),
@@ -30,9 +40,19 @@ const updateProjectSchema = createProjectSchema.partial().extend({
 
 export async function GET(request: NextRequest) {
   try {
-    // Éviter les appels Prisma pendant le build
-    if (process.env.NODE_ENV !== 'production' && !request.url) {
-      return NextResponse.json({ error: 'Build time - no database access' })
+    // Garde robuste contre l'exécution durant le build
+    if (!request || !request.url || process.env.NEXT_PHASE === 'phase-production-build') {
+      return NextResponse.json({ 
+        error: 'Build time - no database access',
+        buildPhase: process.env.NEXT_PHASE 
+      }, { status: 503 })
+    }
+
+    const prisma = getPrisma()
+    if (!prisma) {
+      return NextResponse.json({ 
+        error: 'Database not available during build' 
+      }, { status: 503 })
     }
     
     const { searchParams } = new URL(request.url)
@@ -110,6 +130,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const prisma = getPrisma()
+    if (!prisma) {
+      return NextResponse.json({ 
+        error: 'Database not available during build' 
+      }, { status: 503 })
+    }
+
     const body = await request.json()
     const validatedData = createProjectSchema.parse(body)
     
@@ -151,6 +178,13 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const prisma = getPrisma()
+    if (!prisma) {
+      return NextResponse.json({ 
+        error: 'Database not available during build' 
+      }, { status: 503 })
+    }
+
     const body = await request.json()
     const validatedData = updateProjectSchema.parse(body)
     
@@ -194,6 +228,13 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const prisma = getPrisma()
+    if (!prisma) {
+      return NextResponse.json({ 
+        error: 'Database not available during build' 
+      }, { status: 503 })
+    }
+
     const { searchParams } = new URL(request.url)
     const projectId = searchParams.get('projectId')
     const userId = searchParams.get('userId')

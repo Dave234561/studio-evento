@@ -17,15 +17,15 @@ const nextConfig = {
   // Configuration pour la génération statique
   // output: 'standalone', // Désactivé temporairement pour Vercel
   
-  // Rewrites pour les routes personnalisées
-  async rewrites() {
-    return [
-      {
-        source: '/studio-evento.html',
-        destination: '/api/studio-evento',
-      },
-    ]
-  },
+  // Rewrites désactivés temporairement pour debug build Vercel
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/studio-evento.html',
+  //       destination: '/api/studio-evento',
+  //     },
+  //   ]
+  // },
   
   // Headers pour la sécurité et le CORS
   async headers() {
