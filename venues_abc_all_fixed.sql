@@ -1,0 +1,248 @@
+-- Fichier SQL complet avec toutes les venues (échappement corrigé)
+-- Correction de l'erreur: syntax error at or near "\"
+
+-- Supprimer la table existante si elle existe (optionnel)
+-- DROP TABLE IF EXISTS venues_abc;
+
+-- Créer la table venues_abc
+CREATE TABLE IF NOT EXISTS venues_abc (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    capacite VARCHAR(50),
+    localite VARCHAR(255),
+    code_postal VARCHAR(10),
+    departement VARCHAR(100),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Vider la table avant insertion (optionnel)
+-- TRUNCATE TABLE venues_abc;
+
+-- Insertion de toutes les venues avec échappement correct
+INSERT INTO venues_abc (nom, capacite, localite, code_postal, departement) VALUES
+('Le Scarlett', '200 pers', 'Paris 6ème', NULL, 'Paris'),
+('Vue sur Seine', '25 pers', 'Rouen', NULL, 'Seine-Maritime'),
+('Domaine Tour des Chênes', '300 pers', 'Saint-Laurent-des-Arbres', NULL, 'Gard'),
+('Château du Bois Guy', '10 pers', 'Parigné', NULL, 'Ille-et-Vilaine'),
+('CGR Périgueux', '150 pers', 'Périgueux', NULL, 'Dordogne'),
+('La Taverne de l''Olympia', '60 pers', 'Paris 9ème', NULL, 'Paris'),
+('Péniche  Événement', '200 pers', 'Paris 12ème', NULL, 'Paris'),
+('Espace de l''Ouest Lyonnais', '20 pers', 'Lyon 5ème arrondissement', NULL, 'Rhône'),
+('Casino de Calais', '40 pers', 'Calais', NULL, 'Pas-de-Calais'),
+('Casino de Pornic', '950 pers', 'Pornic', NULL, 'Loire-Atlantique'),
+('Château des Ravatys', '30 pers', 'Saint-Lager', NULL, 'Rhône'),
+('Docks de Paris', '3500 pers', 'Saint-Denis', NULL, 'Seine-Saint-Denis'),
+('Ferme de Perinaguen', '100 pers', 'Penmarch', NULL, 'Finistère'),
+('CGR Blagnac', '156 pers', 'Blagnac', NULL, 'Haute-Garonne'),
+('CGR Tarnos', '500 pers', 'Tarnos', NULL, 'Landes'),
+('CGR Évry', '150 pers', 'Évry', NULL, 'Essonne'),
+('Les Salons Emirates', '460 pers', 'Vitry-sur-Seine', NULL, 'Val-de-Marne'),
+('Auberge du Halage', '60 pers', 'Poses', NULL, 'Eure'),
+('Château de Chevillon', '600 pers', 'Charny-Orée-de-Puisaye', NULL, 'Yonne'),
+('Les Templiers', '500 pers', 'Rugney', NULL, 'Vosges'),
+('Victoria Station', '80 pers', 'Méré', NULL, 'Yvelines'),
+('L''Olivier', '800 pers', 'Morangis', NULL, 'Essonne'),
+('La Sologne', '150 pers', 'Roissy-en-Brie', NULL, 'Seine-et-Marne'),
+('Mas de Jonquerolles', '400 pers', 'Saint-Rémy-de-Provence', NULL, 'Bouches-du-Rhône'),
+('Au Jardin d''Eden', '300 pers', 'Pont-Audemer', NULL, 'Eure'),
+('Le 220', '50 pers', 'Paris 15ème', NULL, 'Paris'),
+('Le Greenwich', '130 pers', 'Marseille 8ème arrondissement', NULL, 'Bouches-du-Rhône'),
+('La Maison du Fleuve', '12 pers', 'Camblanes-et-Meynac', NULL, 'Gironde'),
+('L''Île Enchantée', '140 pers', 'Vénissieux', NULL, 'Rhône'),
+('Le Relais des Chênes', '60 pers', 'Les Matelles', NULL, 'Hérault'),
+('Le Domaine du Petit Marais', '130 pers', 'Chaumes-en-Retz', NULL, 'Loire-Atlantique'),
+('Espace de Conférences Iris', '60 pers', 'Paris 11ème', NULL, 'Paris'),
+('Domaine du Beyssac', '40 pers', 'Cintegabelle', NULL, 'Haute-Garonne'),
+('Le Sing Sing', '1200 pers', 'Toulouse', NULL, 'Haute-Garonne'),
+('La Table des Artistes', '150 pers', 'Courbevoie', NULL, 'Hauts-de-Seine'),
+('Château de Reilly', '100 pers', 'Reilly', NULL, 'Oise'),
+('Restaurant Les Grillons', '20 pers', 'Neuville-en-Ferrain', NULL, 'Nord'),
+('Espace Hermès 75011', '110 pers', 'Paris 11ème', NULL, 'Paris'),
+('Péniche Cinéma', '220 pers', 'Paris 19ème', NULL, 'Paris'),
+('Péniche Saint Louis', '49 pers', 'Toulouse', NULL, 'Haute-Garonne'),
+('La Clé en Main', '220 pers', 'Urville', NULL, 'Calvados'),
+('Vin et Marée Murat', '110 pers', 'Paris 16ème', NULL, 'Paris'),
+('Château de Beaulon', '290 pers', 'Beaulon', NULL, 'Allier'),
+('Ô Grillon', '90 pers', 'Vitrolles', NULL, 'Bouches-du-Rhône'),
+('L''Arc en Ciel', '290 pers', 'Mauges-sur-Loire', NULL, 'Maine-et-Loire'),
+('La Bergerie', '90 pers', 'Belin-Béliet', NULL, 'Gironde'),
+('Théâtre Saint-Georges', '200 pers', 'Paris 9ème', NULL, 'Paris'),
+('Terminal Club', '130 pers', 'Lyon 1er arrondissement', NULL, 'Rhône'),
+('Pathé Les Rives de l''Orne', '299 pers', 'Caen', NULL, 'Calvados'),
+('Stade Marie-Marvingt', '30 pers', 'Le Mans', NULL, 'Sarthe'),
+('Domaine de la Prade', '130 pers', 'Cébazat', NULL, 'Puy-de-Dôme'),
+('Planet Ocean Montpellier', '180 pers', 'Montpellier', NULL, 'Hérault'),
+('Hôtel & Spa Le Belvédère', '60 pers', 'Lauzerte', NULL, 'Tarn-et-Garonne'),
+('Euro Meeting Center', '50 pers', 'Nantes', NULL, 'Loire-Atlantique'),
+('Cescom', '4 pers', 'Metz', NULL, 'Moselle'),
+('Hôtel La Haie des Vignes', '20 pers', 'Allain', NULL, 'Meurthe-et-Moselle'),
+('Mémorial Charles de Gaulle', '700 pers', 'Colombey-les-Deux-Églises', NULL, 'Haute-Marne'),
+('Salle de Saint-Paul-du-Bois', '100 pers', 'Saint-Paul-du-Bois', NULL, 'Maine-et-Loire'),
+('Palais des Congrès de Rochefort', '51 pers', 'Rochefort', NULL, 'Charente-Maritime'),
+('Les Villages Sous les Pins', '50 pers', 'Léon', NULL, 'Landes'),
+('Mas Le Petit Nizon', '120 pers', 'Saint-Laurent-des-Arbres', NULL, 'Gard'),
+('Théâtre des 2 Anes', '15 pers', 'Paris 18ème', NULL, 'Paris'),
+('Bateau Boréas - l''Armada', '400 pers', 'Paris 16ème', NULL, 'Paris'),
+('Pasino de Hyères', '609 pers', 'Hyères', NULL, 'Var'),
+('Pavillon Boulogne', '2000 pers', 'Paris 16ème', NULL, 'Paris'),
+('Espace Vocation Haussmann Saint-Lazare', '25 pers', 'Paris 9ème', NULL, 'Paris'),
+('Hôtel Abbaye du Golf', '150 pers', 'Lésigny', NULL, 'Seine-et-Marne'),
+('Le Brun de Neuville', '200 pers', 'Bethon', NULL, 'Marne'),
+('Espace La Forge', '300 pers', 'Portets', NULL, 'Gironde'),
+('Le Jazz Volant', '150 pers', 'La Baule-Escoublac', NULL, 'Loire-Atlantique'),
+('Château Giscours', '40 pers', 'Labarde', NULL, 'Gironde'),
+('CCI Portes de Normandie', '300 pers', 'Évreux', NULL, 'Eure'),
+('Manoir de Randrecard', '70 pers', 'Treffléan', NULL, 'Morbihan'),
+('Relais des Landes', '40 pers', 'Ouchamps', NULL, 'Loir-et-Cher'),
+('Gîte de la Vallée Verte', '16 pers', 'Freigné', NULL, 'Loire-Atlantique'),
+('Hôtel Val-Vignes', '600 pers', 'Saint-Hippolyte', NULL, 'Haut-Rhin'),
+('Le Fleuray Hôtel & Restaurant', '80 pers', 'Cangey', NULL, 'Indre-et-Loire'),
+('Le Passage Sainte Croix', '70 pers', 'Nantes', NULL, 'Loire-Atlantique'),
+('Espace Plan B', '14 pers', 'Ans', NULL, 'Province de Liège'),
+('La Pagode de Chanteloup', '500 pers', 'Amboise', NULL, 'Indre-et-Loire'),
+('QG Quartier Général', '170 pers', 'Paris 11ème', NULL, 'Paris'),
+('MK2 Bibliothèque', '250 pers', 'Paris 13ème', NULL, 'Paris'),
+('Centre d''Affaires Ifacom', '2 pers', 'Pointe-à-Pitre', NULL, 'Guadeloupe'),
+('La Rencontre', '10 pers', 'Toulouse', NULL, 'Haute-Garonne'),
+('Teuf Teuf Club', '80 pers', 'Lyon 5ème arrondissement', NULL, 'Rhône'),
+('Mas de l''Espérance', '100 pers', 'Saint-Gilles', NULL, 'Gard'),
+('Le Haut Morand', '85 pers', 'Poilley', NULL, 'Ille-et-Vilaine'),
+('Salle & Gîtes de l''Étang', '90 pers', 'Brissac-Quincé', NULL, 'Maine-et-Loire'),
+('Le Chai d''Aigues Vives', '150 pers', 'Pompignac', NULL, 'Gironde'),
+('Domaine de la Grange', '130 pers', 'Huisseau-sur-Cosson', NULL, 'Loir-et-Cher'),
+('Ferme de Kerprat', '150 pers', 'Guidel', NULL, 'Morbihan'),
+('Salon Caroni', '100 pers', 'Marcq-en-Barœul', NULL, 'Nord'),
+('Potager des Princes', '80 pers', 'Chantilly', NULL, 'Oise'),
+('La Roseraie 80', '80 pers', 'Sains-en-Amiénois', NULL, 'Somme'),
+('Espace des Bateliers', '50 pers', 'Strasbourg', NULL, 'Bas-Rhin'),
+('Le Loft 113', '80 pers', 'Vitrolles', NULL, 'Bouches-du-Rhône'),
+('Les Salons Lyna', '500 pers', 'Vitry-sur-Seine', NULL, 'Val-de-Marne'),
+('Pathé Labège', '350 pers', 'Labège', NULL, 'Haute-Garonne'),
+('Pathé Grand-Quevilly', '195 pers', 'Le Grand-Quevilly', NULL, 'Seine-Maritime'),
+('Domaine d''Arvigny', '150 pers', 'Moissy-Cramayel', NULL, 'Seine-et-Marne'),
+('Casino de La Roche-Posay', '150 pers', 'La Roche-Posay', NULL, 'Vienne'),
+('Château Le Buisson Garembourg', '130 pers', 'Guichainville', NULL, 'Eure'),
+('Nouveau Casino', '300 pers', 'Paris 11ème', NULL, 'Paris'),
+('Château de Chaumont', '50 pers', 'Chaumont', NULL, 'Yonne'),
+('Château Vaudois', '400 pers', 'Roquebrune-sur-Argens', NULL, 'Var'),
+('Domaine du Château d''Aunoy', '25 pers', 'Champeaux', NULL, 'Seine-et-Marne'),
+('Château Comtesse Lafond', '250 pers', 'Épernay', NULL, 'Marne'),
+('Château de la Roque Forcade', '10 pers', 'Peypin', NULL, 'Bouches-du-Rhône'),
+('Château d''Avelin', '250 pers', 'Avelin', NULL, 'Nord'),
+('Château des Dauphins', '220 pers', 'Saint-Loubès', NULL, 'Gironde'),
+('Château du Vivier', '250 pers', 'Fontenay-Trésigny', NULL, 'Seine-et-Marne'),
+('Château La Peyrère du Tertre', '200 pers', 'Savignac', NULL, 'Gironde'),
+('Château Montus', '300 pers', 'Castelnau-Rivière-Basse', NULL, 'Hautes-Pyrénées'),
+('Château Rol Valentin', '80 pers', 'Saint-Étienne-de-Lisse', NULL, 'Gironde'),
+('Château La Tilleraie', '150 pers', 'Bergerac', NULL, 'Dordogne'),
+('Château de Chabenet', '120 pers', 'Le Pont-Chrétien-Chabenet', NULL, 'Indre'),
+('Château de Canon', '20 pers', 'Mézidon-Canon', NULL, 'Calvados'),
+('Château de Beauchêne', '150 pers', 'Saint-Aubin-sur-Gaillon', NULL, 'Eure'),
+('Château Belrose Moncaillou', '150 pers', 'Sadirac', NULL, 'Gironde'),
+('Château Grattequina', '500 pers', 'Bordeaux', NULL, 'Gironde'),
+('Château La Clotte-Cazalis', '80 pers', 'Barsac', NULL, 'Gironde'),
+('L''Orangerie du Château de Motteville', '100 pers', 'Motteville', NULL, 'Seine-Maritime'),
+('Château Marith', '40 pers', 'Clairac', NULL, 'Lot-et-Garonne'),
+('Château Fédora', '50 pers', 'Marcilloles', NULL, 'Isère'),
+('Orangerie du Château de Grosbois', '200 pers', 'Boissy-Saint-Léger', NULL, 'Val-de-Marne'),
+('Château de Saint-Martin', '380 pers', 'Taradeau', NULL, 'Var'),
+('Le Château du Pin', '180 pers', 'Morancé', NULL, 'Rhône'),
+('Château de Pennautier', '140 pers', 'Pennautier', NULL, 'Aude'),
+('Château de Rully', '200 pers', 'Rully', NULL, 'Saône-et-Loire'),
+('Château de Haroué', '80 pers', 'Haroué', NULL, 'Meurthe-et-Moselle'),
+('Château de Matel', '200 pers', 'Roanne', NULL, 'Loire'),
+('Château de Chéronne', '20 pers', 'Tuffé-Val-de-la-Chéronne', NULL, 'Sarthe'),
+('Château de la Rolandière', '10 pers', 'Trogues', NULL, 'Indre-et-Loire'),
+('Château d''Hattonchâtel', '100 pers', 'Vigneulles-lès-Hattonchâtel', NULL, 'Meuse'),
+('Les Jardins de la Matelote', '800 pers', 'Boulogne-sur-Mer', NULL, 'Pas-de-Calais'),
+('Château de Cransac', '400 pers', 'Fronton', NULL, 'Haute-Garonne'),
+('Domaine de la Fage', '350 pers', 'Noailles', NULL, 'Corrèze'),
+('Château de Sagonne', '200 pers', 'Sagonne', NULL, 'Cher'),
+('Château de Terrides', '150 pers', 'Castelsarrasin', NULL, 'Tarn-et-Garonne'),
+('Château de Marcoux', '80 pers', 'Montregard', NULL, 'Haute-Loire'),
+('Château de Mazières', '500 pers', 'Tendu', NULL, 'Indre'),
+('Château d''Éporce', '300 pers', 'La Quinte', NULL, 'Sarthe'),
+('Château d''Ancy-le-Franc', '400 pers', 'Ancy-le-Franc', NULL, 'Yonne'),
+('Château de Rochemorin', '240 pers', 'Martillac', NULL, 'Gironde'),
+('Château de Monfort', '200 pers', 'Montigny-la-Resle', NULL, 'Yonne'),
+('Domaine du Château de la Plumasserie', '120 pers', 'Fontenay-Trésigny', NULL, 'Seine-et-Marne'),
+('Le Clos de l''Écuyer', '300 pers', 'Ons-en-Bray', NULL, 'Oise'),
+('Agapanthes', '70 pers', 'La Riche', NULL, 'Indre-et-Loire'),
+('La Ferme du Soleil', '50 pers', 'Vert-le-Petit', NULL, 'Essonne'),
+('La Péniche Horizon', '15 pers', 'Paris 7ème', NULL, 'Paris'),
+('Péniche de Réception la Baleine Blanche', '180 pers', 'Paris 13ème', NULL, 'Paris'),
+('Péniche Henjo', '200 pers', 'Paris 5ème', NULL, 'Paris'),
+('Péniche Royal', '150 pers', 'Bordeaux', NULL, 'Gironde'),
+('Péniche Nix Nox', '50 pers', 'Paris 12ème', NULL, 'Paris'),
+('La Péniche de Notre Dame de Paris', '80 pers', 'Paris 5ème', NULL, 'Paris'),
+('Le Kiosque Flottant', '80 pers', 'Paris 13ème', NULL, 'Paris'),
+('La Péniche Croisière de Bercy', '300 pers', 'Paris 12ème', NULL, 'Paris'),
+('Péniche Notre Dame', '250 pers', 'Paris 6ème', NULL, 'Paris'),
+('La Guinguette Pirate', '50 pers', 'Paris 12ème', NULL, 'Paris'),
+('Péniche Sena', '100 pers', 'Paris 4ème', NULL, 'Paris'),
+('Bateau Le Loceynius', '180 pers', 'Paris 13ème', NULL, 'Paris'),
+('Péniche Le Marcounet', '190 pers', 'Paris 4ème', NULL, 'Paris'),
+('Bateaux Parisiens', '180 pers', 'Paris 7ème', NULL, 'Paris'),
+('La Péniche', '150 pers', 'Paris 5ème', NULL, 'Paris'),
+('La Péniche Tour Eiffel', '100 pers', 'Paris 16ème', NULL, 'Paris'),
+('La Marina Suffren', '300 pers', 'Paris 15ème', NULL, 'Paris'),
+('Péniche Niagara Jazz Club', '50 pers', 'Nancy', NULL, 'Meurthe-et-Moselle'),
+('Le Quai Parisien', '250 pers', 'Paris 15ème', NULL, 'Paris'),
+('La Fabrique au Bonheur', '20 pers', 'Paris 16ème', NULL, 'Paris'),
+('Péniche La Balle au Bond', '220 pers', 'Paris 6ème', NULL, 'Paris'),
+('Vedettes de l''Odet', '150 pers', 'Bénodet', NULL, 'Finistère'),
+('La Péniche du Mascaret', '110 pers', 'Saint-Germain-de-la-Rivière', NULL, 'Gironde'),
+('Bateau Restaurant Navix', '120 pers', 'Vannes', NULL, 'Morbihan'),
+('Les Bateaux Toulousains', '60 pers', 'Toulouse', NULL, 'Haute-Garonne'),
+('Café Oz', '120 pers', 'Lyon 3ème arrondissement', NULL, 'Rhône'),
+('Le Rive Gauche', '60 pers', 'Suresnes', NULL, 'Hauts-de-Seine'),
+('Croisières Burdigala', '180 pers', 'Bordeaux', NULL, 'Gironde'),
+('Péniche Modulo', '200 pers', 'Lyon 6ème arrondissement', NULL, 'Rhône'),
+('Bateaux de l''Ill', '80 pers', 'Strasbourg', NULL, 'Bas-Rhin'),
+('Le Reef Club', '200 pers', 'Boulogne-Billancourt', NULL, 'Hauts-de-Seine'),
+('Bateau El Alamein', '400 pers', 'Paris 13ème', NULL, 'Paris'),
+('La Compagnie des Bateaux à Roue', '60 pers', 'Paris 15ème', NULL, 'Paris'),
+('Smart Paddle', '130 pers', 'Sartrouville', NULL, 'Yvelines'),
+('Péniche l''Équité', '100 pers', 'Paris 5ème', NULL, 'Paris'),
+('Francette Paris', '250 pers', 'Paris 7ème', NULL, 'Paris'),
+('Madison Show Cabaret', '80 pers', 'Melun', NULL, 'Seine-et-Marne'),
+('Kok Piraat', '120 pers', 'Lille', NULL, 'Nord'),
+('La Péniche des Impressionnistes', '100 pers', 'Gennevilliers', NULL, 'Hauts-de-Seine'),
+('Nantalot', '50 pers', 'Nantes', NULL, 'Loire-Atlantique'),
+('Péniche BPM Melun Quai de Seine', '25 pers', 'Melun', NULL, 'Seine-et-Marne'),
+('Yacht Gavrinis', '25 pers', 'Vannes', NULL, 'Morbihan'),
+('La Péniche Toulouse', '35 pers', 'Toulouse', NULL, 'Haute-Garonne'),
+('Eaux Vives', '50 pers', 'Louveciennes', NULL, 'Yvelines'),
+('La Petite Péniche de Gladys', '40 pers', 'Puteaux', NULL, 'Hauts-de-Seine');
+
+-- Créer les index pour améliorer les performances
+CREATE INDEX IF NOT EXISTS idx_venues_abc_nom ON venues_abc(nom);
+CREATE INDEX IF NOT EXISTS idx_venues_abc_departement ON venues_abc(departement);
+CREATE INDEX IF NOT EXISTS idx_venues_abc_localite ON venues_abc(localite);
+CREATE INDEX IF NOT EXISTS idx_venues_abc_capacite ON venues_abc(capacite);
+
+-- Fonction pour mettre à jour le timestamp updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Supprimer le trigger existant s'il existe, puis le recréer
+DROP TRIGGER IF EXISTS update_venues_abc_updated_at ON venues_abc;
+CREATE TRIGGER update_venues_abc_updated_at 
+    BEFORE UPDATE ON venues_abc 
+    FOR EACH ROW 
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Vérification des données insérées
+SELECT COUNT(*) as total_venues FROM venues_abc;
+SELECT departement, COUNT(*) as count FROM venues_abc GROUP BY departement ORDER BY count DESC LIMIT 10;
+
+-- Quelques exemples de requêtes utiles
+-- SELECT * FROM venues_abc WHERE nom ILIKE '%château%' ORDER BY nom;
+-- SELECT * FROM venues_abc WHERE departement = 'Paris' ORDER BY capacite DESC;
+-- SELECT * FROM venues_abc WHERE capacite ILIKE '%100%' ORDER BY nom;
