@@ -3,6 +3,10 @@ import { z } from 'zod'
 import prisma from '@/lib/prisma'
 import { generateId } from '@/lib/utils'
 
+// Configuration pour Vercel/Next.js build
+export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
+
 const createProjectSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().optional(),
