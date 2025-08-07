@@ -1,0 +1,28 @@
+INSTRUCTIONS DÉPANNAGE VERCEL - COMMIT INCORRECT
+
+Problème : Vercel utilise le commit 0a94908 au lieu de e3383a6
+
+SOLUTIONS IMMÉDIATES :
+
+1. VÉRIFIER VERCEL DASHBOARD :
+   - Projet : studio-evento
+   - Settings → Git → Production Branch = "main"
+   - Deployments → Latest should be e3383a6
+
+2. FORCER REDÉPLOIEMENT :
+   - Deployments tab
+   - Click "..." → "Redeploy"  
+   - Uncheck "Use existing Build Cache"
+   - Deploy
+
+3. SI VERCEL NE VOIT PAS LE DERNIER COMMIT :
+   - Déconnecter le repo GitHub dans Settings → Git
+   - Reconnecter le repo
+   - Redéployer
+
+4. COMMITS DISPONIBLES :
+   - e3383a6 (DERNIER - avec fix runtime) ✅
+   - 95adf1b (avec nodejs18.x fix) ✅
+   - 0a94908 (initial - ERREUR runtime) ❌
+
+Vercel DOIT utiliser e3383a6 ou 95adf1b pour fonctionner !
