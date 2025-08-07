@@ -60,6 +60,21 @@
         script2.src = 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js';
         script2.onload = () => {
           try {
+            // Check if we're on Vercel domain and show helpful message
+            if (window.location.hostname.includes('vercel.app')) {
+              console.log('🔥 Firebase Auth - Configuration domaine Vercel nécessaire');
+              console.log('📖 Voir FIREBASE-CONFIG.md pour les instructions');
+              console.log('🚀 Contournement temporaire: Ajouter ?demo=true à l\'URL');
+              
+              // Check for demo mode
+              if (window.location.search.includes('demo=true')) {
+                console.log('🚀 Mode démo activé - Authentification contournée');
+                currentUser = { uid: 'demo', email: 'demo@studio-evento.com', displayName: 'Utilisateur Démo' };
+                updateUIForAuthState(currentUser);
+                return;
+              }
+            }
+            
             // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
@@ -81,6 +96,14 @@
             });
           } catch (error) {
             console.error('Firebase initialization error:', error);
+            
+            // Check if it's a domain authorization error
+            if (error.code === 'auth/unauthorized-domain' || error.message.includes('domain') || error.message.includes('origin')) {
+              console.log('🔥 Erreur de domaine Firebase détectée');
+              console.log('📖 Solution: Voir FIREBASE-CONFIG.md');
+              console.log('🚀 Mode démo: ' + window.location.href + '?demo=true');
+            }
+            
             // En cas d'erreur, permettre le mode bypass
             console.log('⚠️ Firebase non disponible - Mode bypass activé');
             console.log('👉 Ajoutez ?bypass-auth=true à l\'URL pour tester sans authentification');
