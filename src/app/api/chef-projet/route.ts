@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ChefProjetAgent } from '@/lib/agents/chef-projet'
 
-export const runtime = 'nodejs18.x'
 export const dynamic = 'force-dynamic'
 
 const chefProjetAgent = new ChefProjetAgent()
