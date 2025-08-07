@@ -1,0 +1,208 @@
+<!-- Module ROI Chat -->
+<div id="roiChatModule" class="page">
+    <div class="header">
+        <div class="logo">📊 Module ROI</div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="showHome()">
+                ← Retour à l'accueil
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="module-header">
+            <div class="module-icon">📊</div>
+            <div>
+                <h2 class="module-title">Mesure du ROI</h2>
+                <p class="module-subtitle">Analyse et optimisation du retour sur investissement</p>
+            </div>
+        </div>
+
+        <div class="module-value">
+            <h5>💎 Valeur ajoutée</h5>
+            <p>Calcul automatique d'un score ROI personnalisé, visualisation graphique, outils recommandés.</p>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="chat-container" style="background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 20px; margin: 20px 0;">
+            <div class="chat-messages" id="roiChatMessages" style="height: 400px; overflow-y: auto; padding: 15px; background: #f8f9fa; border-radius: 10px; margin-bottom: 20px;">
+                <!-- Messages will be added here -->
+                <div class="message agent" style="margin-bottom: 15px; padding: 15px; background: #e8f5e8; border-radius: 10px; border-top-left-radius: 0;">
+                    <div class="message-header" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-weight: bold;">Agent ROI</span>
+                        <span style="color: #666; font-size: 0.8rem;">12:00</span>
+                    </div>
+                    <div class="message-content">
+                        Bonjour ! Je suis l'agent spécialisé en mesure du ROI. Je peux vous aider à calculer et optimiser le retour sur investissement de votre événement. Comment puis-je vous aider aujourd'hui ?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input" style="display: flex; gap: 10px;">
+                <input type="text" id="roiChatInput" placeholder="Posez votre question sur le ROI de votre événement..." style="flex: 1; padding: 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1rem;">
+                <button id="roiChatSend" class="btn btn-primary" style="padding: 15px 20px;">
+                    Envoyer
+                </button>
+            </div>
+        </div>
+
+        <div class="module-examples" style="margin-top: 30px;">
+            <h4>💡 Exemples de questions</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+                <button class="btn btn-secondary" onclick="sendRoiExample('Comment calculer le ROI de mon événement ?')">Comment calculer le ROI ?</button>
+                <button class="btn btn-secondary" onclick="sendRoiExample('Quels KPIs suivre pour mon séminaire commercial ?')">KPIs pour séminaire</button>
+                <button class="btn btn-secondary" onclick="sendRoiExample('Quel est le ROI moyen pour un événement de 25 000€ ?')">ROI moyen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ROI Chat functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const roiChatInput = document.getElementById('roiChatInput');
+    const roiChatSend = document.getElementById('roiChatSend');
+    const roiChatMessages = document.getElementById('roiChatMessages');
+
+    // Function to add a message to the chat
+    function addRoiMessage(content, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'agent'}`;
+        messageDiv.style.marginBottom = '15px';
+        messageDiv.style.padding = '15px';
+        messageDiv.style.borderRadius = '10px';
+        
+        if (isUser) {
+            messageDiv.style.background = '#e3f2fd';
+            messageDiv.style.borderTopRightRadius = '0';
+            messageDiv.style.marginLeft = 'auto';
+            messageDiv.style.maxWidth = '80%';
+        } else {
+            messageDiv.style.background = '#e8f5e8';
+            messageDiv.style.borderTopLeftRadius = '0';
+            messageDiv.style.maxWidth = '80%';
+        }
+
+        const now = new Date();
+        const time = now.getHours().toString().padStart(2, '0') + ':' + 
+                    now.getMinutes().toString().padStart(2, '0');
+
+        messageDiv.innerHTML = `
+            <div class="message-header" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="font-weight: bold;">${isUser ? 'Vous' : 'Agent ROI'}</span>
+                <span style="color: #666; font-size: 0.8rem;">${time}</span>
+            </div>
+            <div class="message-content">
+                ${content}
+            </div>
+        `;
+
+        roiChatMessages.appendChild(messageDiv);
+        roiChatMessages.scrollTop = roiChatMessages.scrollHeight;
+    }
+
+    // Function to send a message to the ROI agent
+    async function sendRoiMessage(message) {
+        if (!message.trim()) return;
+        
+        // Add user message to chat
+        addRoiMessage(message, true);
+        
+        // Clear input
+        roiChatInput.value = '';
+        
+        // Show loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message agent loading';
+        loadingDiv.style.marginBottom = '15px';
+        loadingDiv.style.padding = '15px';
+        loadingDiv.style.background = '#e8f5e8';
+        loadingDiv.style.borderRadius = '10px';
+        loadingDiv.style.borderTopLeftRadius = '0';
+        loadingDiv.style.maxWidth = '80%';
+        loadingDiv.innerHTML = `
+            <div class="message-content">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="spinner" style="width: 20px; height: 20px; border: 3px solid #ddd; border-top-color: #4CAF50; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <span>L'agent ROI réfléchit...</span>
+                </div>
+            </div>
+        `;
+        roiChatMessages.appendChild(loadingDiv);
+        roiChatMessages.scrollTop = roiChatMessages.scrollHeight;
+        
+        try {
+            // Call the API
+            const response = await fetch('/api/orchestrator', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    module: 'analyse-roi',
+                    context: {
+                        source: 'studio-evento',
+                        moduleInterface: 'roi-integrated'
+                    }
+                }),
+            });
+            
+            if (!response.ok) {
+                throw new Error('Erreur lors de la communication avec l\'agent');
+            }
+            
+            const data = await response.json();
+            
+            // Remove loading indicator
+            roiChatMessages.removeChild(loadingDiv);
+            
+            // Add agent response
+            let agentContent = 'Désolé, une erreur est survenue. Veuillez réessayer.';
+            
+            if (data.response) {
+                agentContent = data.response;
+            }
+            
+            addRoiMessage(agentContent);
+            
+        } catch (error) {
+            console.error('Error:', error);
+            
+            // Remove loading indicator
+            roiChatMessages.removeChild(loadingDiv);
+            
+            // Add error message
+            addRoiMessage('Désolé, une erreur est survenue. Veuillez réessayer.');
+        }
+    }
+    
+    // Event listeners
+    if (roiChatInput && roiChatSend) {
+        roiChatSend.addEventListener('click', () => {
+            sendRoiMessage(roiChatInput.value);
+        });
+        
+        roiChatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendRoiMessage(roiChatInput.value);
+            }
+        });
+    }
+    
+    // Make the sendRoiExample function global
+    window.sendRoiExample = function(example) {
+        if (roiChatInput) {
+            roiChatInput.value = example;
+            sendRoiMessage(example);
+        }
+    };
+});
+</script>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+

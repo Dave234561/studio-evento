@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Evento - MVP (Connected)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Pages principales */
+        .page {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            min-height: 80vh;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header avec navigation */
+        .header {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .demo-video {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px dashed #2196F3;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        /* Modules grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .module-card {
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .module-card:hover {
+            border-color: #4CAF50;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .module-card.selected {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #f8fff8, #f0f8f0);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.2);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .module-icon {
+            font-size: 3rem;
+        }
+
+        .module-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .module-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .btn-select {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Loading states */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .api-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .api-status.connected {
+            background: #4CAF50;
+        }
+
+        .api-status.disconnected {
+            background: #f44336;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Styles pour l'authentification utilisateur */
+        .auth-nav-btn {
+            position: relative;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 160px;
+            z-index: 1000;
+        }
+
+        .user-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu button:hover {
+            background-color: #f3f4f6;
+        }
+
+        .btn-secondary-auth {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary-auth:hover {
+            background-color: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Status de connexion API -->
+    <div id="apiStatus" class="api-status disconnected">
+        🔌 Connexion aux APIs EventAI...
+    </div>
+
+    <div class="container">
+        <!-- Header avec navigation -->
+        <div class="header">
+            <div class="logo">🎬 Studio Evento</div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="showPage('home')">Accueil</button>
+                <button class="btn btn-primary" onclick="showPage('modules')">Essai Gratuit</button>
+            </div>
+        </div>
+
+        <!-- Page d'accueil -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>🎬 Concevez votre événement personnalisé en un temps record</h1>
+                <p>L'IA donne des idées, <strong>Studio Evento livre du concret</strong></p>
+                
+                <div class="demo-video">
+                    <h3>🎥 Découvrez la puissance de notre IA</h3>
+                    <p><strong>Exemple concret :</strong> "Séminaire commercial 80 personnes" → IA génère lieu, budget, planning en 2 minutes</p>
+                </div>
+                
+                <button class="btn btn-warning" onclick="showPage('modules')" style="font-size: 1.2rem; padding: 15px 40px;">
+                    🎁 TESTER GRATUITEMENT (1 module au choix)
+                </button>
+            </div>
+        </div>
+
+        <!-- Page de sélection des modules -->
+        <div id="modules" class="page">
+            <h2 style="text-align: center; margin-bottom: 30px;">🎯 Quel est votre principal défi pour cet événement ?</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 40px;">Choisissez le module qui correspond le mieux à vos besoins</p>
+            
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Les modules seront générés dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Page de génération -->
+        <div id="generation" class="page">
+            <h2 style="text-align: center; margin-bottom: 30px;">✨ Génération avec EventAI Pro</h2>
+            
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div style="margin-bottom: 30px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">Décrivez votre événement :</label>
+                    <textarea id="eventDescription" 
+                              placeholder="Ex: Séminaire commercial 2 jours, 80 personnes, Lyon, budget 25k€, formation équipe commerciale + team building"
+                              style="width: 100%; height: 120px; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; resize: vertical;"></textarea>
+                </div>
+                
+                <button id="generateBtn" class="btn btn-primary" onclick="generateWithEventAI()" 
+                        style="width: 100%; padding: 15px; font-size: 1.1rem;">
+                    🤖 Analyser avec EventAI Pro
+                </button>
+                
+                <div id="generationResult" style="margin-top: 30px; display: none;">
+                    <!-- Résultat de la génération -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration de l'API EventAI Pro
+        const EVENTAI_CONFIG = {
+            baseUrl: 'https://3000-ivcfdhs5w4cnit44czwal-33c34f43.manusvm.computer',
+            endpoints: {
+                chat: '/api/chat',
+                projects: '/api/projects'
+            },
+            userId: 'studio-evento-user-' + Date.now() // ID utilisateur temporaire
+        };
+
+        // État de l'application
+        let appState = {
+            currentPage: 'home',
+            selectedModule: null,
+            conversationId: null,
+            currentProject: null,
+            apiConnected: false
+        };
+
+        // Modules disponibles avec mapping vers les agents EventAI
+        const modules = [
+            {
+                id: 'brief',
+                title: 'Je ne sais pas par où commencer',
+                subtitle: 'MODULE : Cahier des charges',
+                icon: '🎯',
+                description: 'Génération rapide d\'un brief événementiel professionnel, exhaustif et structuré, même à partir d\'une simple description ou d\'un document existant.',
+                agent: 'BRIEF_GENERATOR',
+                advantages: [
+                    'Guidage même pour les néophytes',
+                    'Parfait pour l\'externalisation ou la collaboration',
+                    'Prise en compte automatique des contraintes'
+                ]
+            },
+            {
+                id: 'venue',
+                title: 'Trouver le lieu parfait',
+                subtitle: 'MODULE : Recherche de lieux',
+                icon: '🏢',
+                description: 'Sélection personnalisée de lieux pertinents selon critères, avec comparatif et liens cliquables.',
+                agent: 'VENUE',
+                advantages: [
+                    'Comparatif instantané',
+                    'Liens directs et benchmarking',
+                    'Bloc recommandations pour la suite'
+                ]
+            },
+            {
+                id: 'creative',
+                title: 'Créer un concept unique',
+                subtitle: 'MODULE : Storytelling créatif',
+                icon: '🎭',
+                description: 'Génération de concepts créatifs innovants adaptés à votre culture d\'entreprise.',
+                agent: 'STORYTELLING',
+                advantages: [
+                    'Concepts sur-mesure',
+                    'Adaptation culturelle',
+                    'Déclinaisons créatives'
+                ]
+            },
+            {
+                id: 'rse',
+                title: 'Réduire l\'impact carbone',
+                subtitle: 'MODULE : Analyse RSE',
+                icon: '🌱',
+                description: 'Calcul d\'empreinte carbone et recommandations durables selon les normes ADEME.',
+                agent: 'RSE',
+                advantages: [
+                    'Calcul ADEME précis',
+                    'Recommandations ISO 20121',
+                    'Alternatives durables'
+                ]
+            }
+        ];
+
+        // Fonctions de navigation
+        function showPage(pageId) {
+            // Masquer toutes les pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Afficher la page demandée
+            document.getElementById(pageId).classList.add('active');
+            appState.currentPage = pageId;
+            
+            // Générer le contenu si nécessaire
+            if (pageId === 'modules') {
+                generateModulesGrid();
+            }
+        }
+
+        function generateModulesGrid() {
+            const grid = document.getElementById('modulesGrid');
+            grid.innerHTML = '';
+            
+            modules.forEach(module => {
+                const card = document.createElement('div');
+                card.className = 'module-card';
+                card.innerHTML = `
+                    <div class="module-header">
+                        <div class="module-icon">${module.icon}</div>
+                        <div>
+                            <h3 class="module-title">${module.title}</h3>
+                            <p class="module-subtitle">${module.subtitle}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="background: #e8f5e8; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                            <strong>💎 Valeur ajoutée :</strong><br>
+                            ${module.description}
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <strong>✨ Avantages clés :</strong>
+                            <ul style="margin: 5px 0 0 20px;">
+                                ${module.advantages.map(adv => `<li>${adv}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-select" onclick="selectModule('${module.id}')">
+                        🚀 Sélectionner
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectModule(moduleId) {
+            appState.selectedModule = moduleId;
+            showPage('generation');
+            
+            // Mettre à jour l'interface
+            const module = modules.find(m => m.id === moduleId);
+            document.querySelector('#generation h2').innerHTML = 
+                `✨ ${module.title} - ${module.subtitle}`;
+        }
+
+        // Connexion aux APIs EventAI Pro
+        async function testApiConnection() {
+            try {
+                const response = await fetch(`${EVENTAI_CONFIG.baseUrl}/api/chat`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok || response.status === 400) { // 400 est normal pour GET sans params
+                    appState.apiConnected = true;
+                    updateApiStatus('connected', '✅ EventAI Pro connecté');
+                    return true;
+                }
+            } catch (error) {
+                console.error('Erreur de connexion API:', error);
+            }
+            
+            appState.apiConnected = false;
+            updateApiStatus('disconnected', '❌ EventAI Pro déconnecté');
+            return false;
+        }
+
+        function updateApiStatus(status, message) {
+            const statusEl = document.getElementById('apiStatus');
+            statusEl.className = `api-status ${status}`;
+            statusEl.textContent = message;
+            
+            // Masquer après 3 secondes si connecté
+            if (status === 'connected') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Génération avec EventAI Pro
+        async function generateWithEventAI() {
+            const description = document.getElementById('eventDescription').value.trim();
+            const generateBtn = document.getElementById('generateBtn');
+            const resultDiv = document.getElementById('generationResult');
+            
+            if (!description) {
+                alert('Veuillez décrire votre événement');
+                return;
+            }
+            
+            if (!appState.apiConnected) {
+                alert('Connexion aux APIs EventAI Pro requise');
+                return;
+            }
+            
+            // État de chargement
+            generateBtn.innerHTML = '<span class="loading"></span> Génération en cours...';
+            generateBtn.disabled = true;
+            
+            try {
+                const module = modules.find(m => m.id === appState.selectedModule);
+                
+                // Préparer le prompt spécialisé selon le module
+                const prompt = preparePromptForModule(module, description);
+                
+                // Appel à l'API EventAI Pro
+                const response = await fetch(`${EVENTAI_CONFIG.baseUrl}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: prompt,
+                        userId: EVENTAI_CONFIG.userId,
+                        conversationId: appState.conversationId,
+                        context: {
+                            module: module.id,
+                            agent: module.agent,
+                            description: description
+                        }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur API: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Sauvegarder l'ID de conversation
+                    appState.conversationId = data.data.conversationId;
+                    
+                    // Afficher le résultat
+                    displayResult(data.data.response, data.data.metadata);
+                } else {
+                    throw new Error(data.error || 'Erreur inconnue');
+                }
+                
+            } catch (error) {
+                console.error('Erreur génération:', error);
+                resultDiv.innerHTML = `
+                    <div style="background: #ffebee; border: 2px solid #f44336; border-radius: 10px; padding: 20px; text-align: center;">
+                        <h3 style="color: #f44336;">❌ Erreur de génération</h3>
+                        <p>${error.message}</p>
+                        <button class="btn btn-secondary" onclick="generateWithEventAI()" style="margin-top: 15px;">
+                            🔄 Réessayer
+                        </button>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            } finally {
+                // Restaurer le bouton
+                generateBtn.innerHTML = '🤖 Analyser avec EventAI Pro';
+                generateBtn.disabled = false;
+            }
+        }
+
+        function preparePromptForModule(module, description) {
+            const basePrompt = `Événement à analyser : "${description}"`;
+            
+            switch (module.agent) {
+                case 'BRIEF_GENERATOR':
+                    return `${basePrompt}\n\nGénère un cahier des charges détaillé pour cet événement. Inclus les objectifs, spécifications techniques, contraintes, timeline et budget estimé.`;
+                
+                case 'VENUE':
+                    return `${basePrompt}\n\nRecommande des lieux adaptés pour cet événement. Inclus les critères de sélection, comparatifs et conseils de négociation.`;
+                
+                case 'STORYTELLING':
+                    return `${basePrompt}\n\nCrée un concept créatif innovant pour cet événement. Inclus le storytelling, les éléments visuels et les déclinaisons thématiques.`;
+                
+                case 'RSE':
+                    return `${basePrompt}\n\nAnalyse l'impact environnemental de cet événement et propose des recommandations durables selon les normes ADEME et ISO 20121.`;
+                
+                default:
+                    return basePrompt;
+            }
+        }
+
+        function displayResult(response, metadata) {
+            const resultDiv = document.getElementById('generationResult');
+            
+            resultDiv.innerHTML = `
+                <div style="background: #e8f5e8; border: 2px solid #4CAF50; border-radius: 15px; padding: 25px;">
+                    <h3 style="color: #4CAF50; margin-bottom: 20px;">
+                        ✅ Analyse EventAI Pro terminée
+                    </h3>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; white-space: pre-wrap; line-height: 1.6;">
+                        ${response.content}
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <div style="background: rgba(76, 175, 80, 0.1); padding: 10px 15px; border-radius: 8px;">
+                            <strong>🤖 Agent:</strong> ${response.agentType}
+                        </div>
+                        <div style="background: rgba(76, 175, 80, 0.1); padding: 10px 15px; border-radius: 8px;">
+                            <strong>⚡ Modèle:</strong> ${response.model}
+                        </div>
+                        <div style="background: rgba(76, 175, 80, 0.1); padding: 10px 15px; border-radius: 8px;">
+                            <strong>⏱️ Temps:</strong> ${metadata.latency}ms
+                        </div>
+                        <div style="background: rgba(76, 175, 80, 0.1); padding: 10px 15px; border-radius: 8px;">
+                            <strong>🎯 Tokens:</strong> ${metadata.tokens}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="generateWithEventAI()">
+                            🔄 Nouvelle analyse
+                        </button>
+                        <button class="btn btn-secondary" onclick="showPage('modules')">
+                            📋 Autre module
+                        </button>
+                        <button class="btn btn-secondary" onclick="saveProject()">
+                            💾 Sauvegarder projet
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+        }
+
+        async function saveProject() {
+            if (!appState.conversationId) {
+                alert('Aucune conversation à sauvegarder');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${EVENTAI_CONFIG.baseUrl}/api/projects`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: `Projet Studio Evento - ${new Date().toLocaleDateString()}`,
+                        description: document.getElementById('eventDescription').value,
+                        userId: EVENTAI_CONFIG.userId,
+                        eventType: appState.selectedModule
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    appState.currentProject = data.data.id;
+                    alert('✅ Projet sauvegardé avec succès !');
+                } else {
+                    throw new Error('Erreur de sauvegarde');
+                }
+            } catch (error) {
+                console.error('Erreur sauvegarde:', error);
+                alert('❌ Erreur lors de la sauvegarde');
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🎬 Studio Evento MVP (Connected) - Initialisation...');
+            
+            // Test de connexion aux APIs
+            await testApiConnection();
+            
+            // Générer la grille des modules
+            generateModulesGrid();
+            
+            console.log('✅ Studio Evento MVP connecté aux APIs EventAI Pro');
+            console.log('📊 Configuration:', EVENTAI_CONFIG);
+        });
+
+        // Fonctions d'authentification
+        window.signOut = function() {
+            if (window.firebase && window.firebase.auth()) {
+                window.firebase.auth().signOut().then(() => {
+                    console.log('Utilisateur déconnecté');
+                }).catch((error) => {
+                    console.error('Erreur lors de la déconnexion:', error);
+                });
+            }
+        };
+
+        window.showPage = function(pageName) {
+            if (pageName === 'dashboard') {
+                console.log('Redirection vers le dashboard utilisateur');
+            } else if (pageName === 'home') {
+                window.scrollTo(0, 0);
+            }
+        };
+
+        window.toggleUserMenu = function() {
+            const menu = document.getElementById('userMenu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            }
+        };
+
+        window.startFreeTrial = function() {
+            if (isUserAuthenticated()) {
+                showPage('modules');
+            } else {
+                showAuthModal(function() {
+                    showPage('modules');
+                });
+            }
+        };
+    </script>
+
+    <!-- Firebase Auth -->
+    <script src="firebase-auth.js"></script>
+</body>
+</html>
+

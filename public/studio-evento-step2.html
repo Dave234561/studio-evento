@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Event - Assistant Chef de Projet IA</title>
+    
+    <!-- Montserrat Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind personnalisée -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'display': ['Montserrat', 'sans-serif'],
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'google-blue': '#1a73e8',
+                        'google-blue-hover': '#1b66c9',
+                        'google-green': '#34a853',
+                        'google-red': '#ea4335',
+                        'google-yellow': '#fbbc04',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-subtle': 'bounceSubtle 1s infinite',
+                        'typing': 'typing 2s steps(20, end)',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        bounceSubtle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        },
+                        typing: {
+                            '0%': { opacity: '0' },
+                            '50%': { opacity: '0.7' },
+                            '100%': { opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- CSS personnalisé -->
+    <style>
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+        
+        /* Buttons */
+        .cta-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            border-radius: 100px;
+            padding: 16px 24px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-primary:hover {
+            background-color: #1b66c9;
+            box-shadow: 0 2px 8px 0 rgba(26, 115, 232, 0.3), 0 1px 3px 1px rgba(26, 115, 232, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        .cta-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .cta-outlined {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            border-radius: 100px;
+            padding: 16px 24px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            background-color: transparent;
+            color: #4285f4;
+            border: 2px solid #4285f4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-outlined:hover {
+            background-color: #f0f7ff;
+            transform: translateY(-1px);
+        }
+        
+        /* Progress Steps */
+        .progress-steps {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            border-radius: 50px;
+            color: #5f6368;
+            font-weight: 500;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            letter-spacing: -0.01em;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            background: linear-gradient(135deg, #1a73e8, #9c27b0);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .step.completed {
+            background: #34a853;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .step.active .step-number,
+        .step.completed .step-number {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .step-connector {
+            width: 80px;
+            height: 3px;
+            background: #e8eaed;
+            margin: 0 16px;
+            border-radius: 2px;
+        }
+        
+        /* Chat Interface */
+        .chat-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        
+        .message {
+            margin-bottom: 24px;
+            animation: fade-in 0.5s ease-out;
+        }
+        
+        .message-ai {
+            display: block;
+        }
+        
+        .message-user {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a73e8, #9c27b0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .message-content {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            border-radius: 18px;
+            max-width: 85%;
+            line-height: 1.5;
+        }
+        
+        .message-user .message-content {
+            background: #1a73e8;
+            color: white;
+        }
+
+        /* Helper class for message indentation */
+        .ml-13 {
+            margin-left: 52px;
+        }
+        
+        .chat-input {
+            padding: 24px;
+            border-top: 1px solid #e8eaed;
+            background: white;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        
+        .input-field {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e8eaed;
+            border-radius: 25px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            resize: none;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+        
+        .send-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .send-button:hover:not(:disabled) {
+            background: #1b66c9;
+            transform: scale(1.05);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 0;
+            max-width: 100px;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #9aa0a6;
+            animation: pulse 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        
+        .quick-action {
+            background: #f0f7ff;
+            color: #1a73e8;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e8f0fe;
+        }
+        
+        .quick-action:hover {
+            background: #e8f0fe;
+            transform: translateY(-1px);
+        }
+        
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed #e8eaed;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload-area:hover,
+        .file-upload-area.drag-over {
+            border-color: #1a73e8;
+            background: #f0f7ff;
+        }
+        
+        .file-upload-area.has-file {
+            border-color: #34a853;
+            background: #e8f5e8;
+        }
+        
+        /* Templates */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .template-card {
+            background: white;
+            border: 2px solid #e8eaed;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .template-card:hover {
+            border-color: #1a73e8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .template-card.selected {
+            border-color: #1a73e8;
+            background: #f0f7ff;
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: white;
+            color: #202124;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            max-width: 320px;
+            border-left: 4px solid #34a853;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            border-left-color: #ea4335;
+        }
+        
+        .notification.warning {
+            border-left-color: #fbbc04;
+        }
+        
+        /* Loading States */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e8eaed;
+            border-top: 2px solid #1a73e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .progress-steps {
+                padding: 20px;
+            }
+            
+            .step {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+            
+            .step-connector {
+                display: none;
+            }
+            
+            .chat-container {
+                height: 450px;
+            }
+            
+            .chat-messages {
+                padding: 16px;
+            }
+            
+            .message-content {
+                max-width: 90%;
+            }
+            
+            .chat-input {
+                padding: 16px;
+            }
+
+            .ml-13 {
+                margin-left: 42px;
+            }
+            
+            /* Header section mobile adjustments */
+            .bg-white.border-2.border-blue-100 {
+                padding: 24px 20px;
+            }
+        }
+        
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Focus visible */
+        .focus-visible:focus-visible {
+            outline: 2px solid #1a73e8;
+            outline-offset: 2px;
+        }
+
+        /* Styles pour l'authentification utilisateur */
+        .auth-nav-btn {
+            position: relative;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 160px;
+            z-index: 1000;
+        }
+
+        .user-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu button:hover {
+            background-color: #f3f4f6;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1b66c9;
+        }
+    </style>
+</head>
+<body class="font-montserrat bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    
+    <!-- Notification Toast -->
+    <div class="notification" id="notification" role="alert" aria-live="polite">
+        <span id="notificationText">Message</span>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm" role="banner">
+        <div class="container mx-auto px-5 md:px-10" style="padding-top: 0; padding-bottom: 0;">
+            <nav class="flex items-center justify-between" role="navigation" aria-label="Navigation principale">
+                <div class="flex items-center">
+                    <img src="votre-logo.png" alt="Studio Event" class="h-48 w-auto object-contain" style="max-width: 600px;">
+                </div>
+                <div class="hidden md:flex space-x-8 items-center nav-buttons">
+                    <button class="text-gray-700 hover:text-google-blue font-medium transition-colors focus-visible" onclick="goBack()" aria-label="Retourner à la page précédente">
+                        ← Retour
+                    </button>
+                    <button class="text-gray-700 hover:text-google-blue font-medium transition-colors focus-visible" onclick="showHelp()" aria-label="Afficher l'aide">
+                        Aide
+                    </button>
+                    <button class="cta-primary" onclick="startFreeTrial()">Se connecter</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="container mx-auto px-5 md:px-10 py-16" role="main">
+        
+        <!-- Progress Steps -->
+        <div class="progress-steps" role="navigation" aria-label="Étapes du processus">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <div class="step completed">
+                    <div class="step-number" aria-label="Étape 1 terminée">✓</div>
+                    <span>Profil utilisateur</span>
+                </div>
+                <div class="step-connector hidden md:block" aria-hidden="true"></div>
+                <div class="step active">
+                    <div class="step-number" aria-label="Étape 2 en cours">2</div>
+                    <span>Assistant Chef de Projet</span>
+                </div>
+                <div class="step-connector hidden md:block" aria-hidden="true"></div>
+                <div class="step">
+                    <div class="step-number" aria-label="Étape 3 à venir">3</div>
+                    <span>Récupérer livrables</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Hero -->
+        <div class="text-center max-w-4xl mx-auto mb-16">
+            <h1 class="text-4xl md:text-6xl font-display font-bold text-gray-900 mb-6">
+                🤖 Assistant Chef de Projet IA
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto font-medium leading-relaxed">
+                Vous n'avez pas de cahier des charges ? Pas de problème ! Notre <strong>Assistant IA spécialisé</strong> va vous guider étape par étape pour créer votre projet événementiel.
+            </p>
+        </div>
+
+        <!-- Main Container with Blue Border -->
+        <div class="max-w-4xl mx-auto mb-16">
+            <div class="bg-white border-4 border-blue-400 rounded-3xl p-8" style="box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+                
+                <!-- Header Section -->
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-6">💬</div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                        Parlez-nous de votre projet
+                    </h2>
+                    <div class="space-y-3 text-gray-600 mb-8 text-lg">
+                        <p class="flex items-center justify-center gap-3">
+                            <span>✨</span>
+                            <span>Notre chef de projet va créer votre cahier des charges complet à partir de zéro</span>
+                        </p>
+                        <p class="flex items-center justify-center gap-3">
+                            <span>🎯</span>
+                            <span>10 questions stratégiques maximum pour structurer votre projet événementiel</span>
+                        </p>
+                    </div>
+                    <!-- Pas de bouton de dépôt en mode création - on part de zéro -->
+                </div>
+
+                <!-- Chat Area -->
+                <div class="mb-8">
+                    <!-- Chat Messages -->
+                    <div class="bg-gray-50 rounded-2xl p-6 mb-6" style="max-height: 400px; overflow-y: auto;" id="chatMessages" role="log" aria-live="polite" aria-label="Messages de conversation">
+                        
+                        <!-- Initial AI Message -->
+                        <div class="message message-ai">
+                            <div class="flex items-start gap-4 mb-6">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-white text-sm font-semibold">AI</span>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <span class="text-sm font-semibold text-gray-700">Assistant IA</span>
+                                    </div>
+                                    <div class="bg-white rounded-xl p-4 text-gray-800 leading-relaxed">
+                                        <p class="mb-0">👋 Bonjour ! Je suis votre chef de projet événementiel expert avec 15+ ans d'expérience. Je vais vous accompagner pour créer votre cahier des charges complet à partir de zéro ! 🚀 Nous partons d'une page blanche et je vais vous guider étape par étape avec 10 questions stratégiques maximum pour structurer parfaitement votre projet événementiel. Pour commencer, parlez-moi de votre entreprise et du type d'événement que vous envisagez !</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Input Area -->
+                    <div class="flex gap-4 items-end">
+                        <div class="flex-1">
+                            <textarea 
+                                class="w-full p-4 border-2 border-gray-200 rounded-xl resize-none focus:border-blue-400 focus:outline-none font-medium text-gray-700"
+                                id="messageInput"
+                                placeholder="Décrivez votre projet événementiel : type d'événement, nombre de participants, objectifs..."
+                                rows="3"
+                                aria-label="Tapez votre message"
+                                onkeydown="handleKeydown(event)"
+                                oninput="autoResize(this)"
+                                style="font-family: 'Montserrat', sans-serif;"
+                            ></textarea>
+                        </div>
+                        <button 
+                            class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-xl transition-colors focus-visible flex items-center justify-center" 
+                            id="sendButton"
+                            onclick="sendMessage()"
+                            aria-label="Envoyer le message"
+                            disabled
+                            style="min-width: 56px; min-height: 56px;"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template Examples Section -->
+        <div class="max-w-4xl mx-auto mb-16" id="templateSection" style="display: none;">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">💡 Exemples de projets</h2>
+                <p class="text-gray-600">Inspirez-vous de ces modèles pour décrire votre événement</p>
+            </div>
+            
+            <div class="template-grid" role="radiogroup" aria-label="Exemples de projets">
+                <div class="template-card focus-visible" onclick="selectTemplate('conference')" role="radio" aria-checked="false" tabindex="0">
+                    <div class="text-3xl mb-3">📊</div>
+                    <h3 class="font-bold text-lg mb-2">Conférence Tech</h3>
+                    <p class="text-gray-600 text-sm mb-3">200 participants, 2 jours, présentations et networking</p>
+                    <div class="text-xs text-blue-600 font-medium">Budget: 50K€ • Lieu: Paris</div>
+                </div>
+                
+                <div class="template-card focus-visible" onclick="selectTemplate('seminaire')" role="radio" aria-checked="false" tabindex="0">
+                    <div class="text-3xl mb-3">🏢</div>
+                    <h3 class="font-bold text-lg mb-2">Séminaire Direction</h3>
+                    <p class="text-gray-600 text-sm mb-3">50 cadres, 1 jour, stratégie et team building</p>
+                    <div class="text-xs text-blue-600 font-medium">Budget: 15K€ • Lieu: Lyon</div>
+                </div>
+                
+                <div class="template-card focus-visible" onclick="selectTemplate('lancement')" role="radio" aria-checked="false" tabindex="0">
+                    <div class="text-3xl mb-3">🚀</div>
+                    <h3 class="font-bold text-lg mb-2">Lancement Produit</h3>
+                    <p class="text-gray-600 text-sm mb-3">300 invités, soirée, démonstrations et cocktail</p>
+                    <div class="text-xs text-blue-600 font-medium">Budget: 80K€ • Lieu: Marseille</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center">
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-6">
+                <button class="cta-outlined text-lg focus-visible" onclick="goBack()">
+                    ← Retour
+                </button>
+                <button class="cta-primary text-lg focus-visible" onclick="generateResult()" id="analyseButton">
+                    🔮 Analyser avec l'IA
+                </button>
+            </div>
+            <div class="text-center">
+                <p class="text-blue-600 text-sm max-w-lg mx-auto bg-blue-50 px-4 py-2 rounded-lg border border-blue-200">
+                    💡 Tip: Utilisez l'assistant IA ci-dessus pour créer votre cahier des charges complet étape par étape
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16" role="contentinfo">
+        <div class="container mx-auto px-5 md:px-10 text-center">
+            <p class="text-gray-400 font-medium text-lg">
+                Studio Event - Assistant IA pour l'événementiel professionnel
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // État de l'application
+        let conversationHistory = [];
+        let isTyping = false;
+        let selectedTemplate = null;
+        let uploadedFile = null;
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🤖 Assistant Chef de Projet IA initialisé');
+            
+            // Activer le bouton d'envoi quand il y a du texte
+            const messageInput = document.getElementById('messageInput');
+            messageInput.addEventListener('input', function() {
+                const sendButton = document.getElementById('sendButton');
+                sendButton.disabled = this.value.trim().length === 0;
+            });
+            
+            // Configuration drag & drop
+            setupDragAndDrop();
+            
+            // Focus initial sur l'input
+            setTimeout(() => {
+                messageInput.focus();
+            }, 500);
+        });
+        
+        // Navigation
+        function goBack() {
+            if (conversationHistory.length > 0) {
+                const confirmLeave = confirm("Vous avez une conversation en cours. Êtes-vous sûr de vouloir revenir à l'accueil ?");
+                if (!confirmLeave) return;
+            }
+            window.location.href = 'studio-evento.html';
+        }
+        
+        // Gestion des messages
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message || isTyping) return;
+            
+            // Ajouter le message utilisateur
+            addMessage(message, 'user');
+            messageInput.value = '';
+            document.getElementById('sendButton').disabled = true;
+            
+            // Appel réel à l'IA Claude
+            showTypingIndicator();
+            sendToRealAI(message);
+        }
+        
+        async function sendToRealAI(message) {
+            try {
+                // Variables de session
+                if (!window.sessionId) {
+                    window.sessionId = 'step2_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                }
+                if (!window.conversationHistory) {
+                    window.conversationHistory = [];
+                }
+                
+                // Ajouter le message utilisateur à l'historique
+                window.conversationHistory.push({
+                    role: 'user',
+                    content: message,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Timeout manuel compatible
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 secondes
+                
+                const response = await fetch('/api/chef-projet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        message: message,
+                        mode: 'creation', // step2 = mode création
+                        conversationHistory: window.conversationHistory,
+                        userId: 'anonymous_' + window.sessionId,
+                        sessionId: window.sessionId
+                    })
+                });
+                
+                clearTimeout(timeoutId);
+                const result = await response.json();
+                console.log('📦 Réponse API step2:', result);
+                
+                hideTypingIndicator();
+                
+                if (result.success && result.response) {
+                    // Ajouter la vraie réponse de Claude
+                    const responseContent = result.response.content || result.response;
+                    addMessage(responseContent, 'ai');
+                    
+                    // Ajouter à l'historique
+                    window.conversationHistory.push({
+                        role: 'assistant',
+                        content: responseContent,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                } else {
+                    console.error('❌ Erreur API step2:', result);
+                    addMessage("❌ Désolé, une erreur s'est produite. Pouvez-vous reformuler votre demande ?", 'ai');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erreur lors de l\'appel à l\'API step2:', error);
+                hideTypingIndicator();
+                
+                if (error.name === 'AbortError') {
+                    addMessage("⏱️ La demande a pris trop de temps. L'IA analyse votre demande en profondeur, veuillez patienter et réessayer.", 'ai');
+                } else if (error.message.includes('Failed to fetch')) {
+                    addMessage("🔌 Problème de connexion au serveur. Vérifiez que le serveur est démarré sur localhost:3000.", 'ai');
+                } else {
+                    addMessage("❌ Erreur inattendue: " + error.message + ". Veuillez réessayer.", 'ai');
+                }
+            } finally {
+                document.getElementById('sendButton').disabled = false;
+            }
+        }
+        
+        function addMessage(content, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${sender === 'user' ? 'user' : 'ai'} mb-6`;
+            
+            if (sender === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start gap-4 justify-end">
+                        <div class="flex-1 max-w-xs">
+                            <div class="bg-blue-500 text-white rounded-xl p-4">
+                                <p class="mb-0">${escapeHtml(content)}</p>
+                            </div>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                            <span class="text-white text-sm font-semibold">👤</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center flex-shrink-0">
+                            <span class="text-white text-sm font-semibold">AI</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-sm font-semibold text-gray-700">Assistant IA</span>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-gray-800 leading-relaxed">
+                                <p class="mb-0">${content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+            
+            // Sauvegarder dans l'historique
+            conversationHistory.push({ content, sender, timestamp: Date.now() });
+        }
+        
+        function handleAIResponse(userMessage) {
+            // Simulations de réponses intelligentes basées sur le contenu
+            const responses = getContextualResponse(userMessage);
+            addMessage(responses.message, 'ai');
+            
+            // Actions contextuelles
+            if (responses.actions) {
+                setTimeout(() => {
+                    responses.actions();
+                }, 500);
+            }
+        }
+        
+        function getContextualResponse(message) {
+            const msg = message.toLowerCase();
+            
+            // Réponses contextuelles selon le type d'événement
+            if (msg.includes('conférence') || msg.includes('conference')) {
+                return {
+                    message: `
+                        <p class="mb-3">Excellent ! Une conférence est un excellent choix. Pour vous aider au mieux, j'ai besoin de quelques précisions :</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-3">
+                            <p class="font-medium mb-2">📋 Informations clés :</p>
+                            <ul class="text-sm space-y-1 list-disc list-inside">
+                                <li>Nombre de participants attendus ?</li>
+                                <li>Durée de l'événement (1 jour, 2 jours...) ?</li>
+                                <li>Thématique principale ?</li>
+                                <li>Budget approximatif ?</li>
+                                <li>Ville ou région souhaitée ?</li>
+                            </ul>
+                        </div>
+                        <p>Répondez à ces questions ou décrivez-moi votre vision en quelques phrases 😊</p>
+                    `
+                };
+            }
+            
+            if (msg.includes('séminaire') || msg.includes('seminaire')) {
+                return {
+                    message: `
+                        <p class="mb-3">Parfait ! Un séminaire permet de fédérer et motiver vos équipes. Pour personnaliser mes recommandations :</p>
+                        <div class="bg-green-50 p-4 rounded-lg mb-3">
+                            <p class="font-medium mb-2">🎯 Questions stratégiques :</p>
+                            <ul class="text-sm space-y-1 list-disc list-inside">
+                                <li>Objectif principal (formation, motivation, stratégie) ?</li>
+                                <li>Profil des participants (direction, managers, équipes) ?</li>
+                                <li>Format souhaité (présentiel, hybride) ?</li>
+                                <li>Activités complémentaires (team building, networking) ?</li>
+                            </ul>
+                        </div>
+                    `,
+                    actions: () => {
+                        showQuickActions(['formation', 'motivation', 'strategie', 'teambuilding']);
+                    }
+                };
+            }
+            
+            if (msg.includes('budget') || msg.includes('prix') || msg.includes('coût')) {
+                return {
+                    message: `
+                        <p class="mb-3">💰 Excellente question ! Le budget dépend de nombreux facteurs. Voici une estimation rapide :</p>
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-3">
+                            <p class="font-medium mb-2">💡 Fourchettes indicatives par participant :</p>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div>• Séminaire 1 jour : 150-400€</div>
+                                <div>• Conférence : 200-600€</div>
+                                <div>• Lancement produit : 300-800€</div>
+                                <div>• Team building : 100-300€</div>
+                            </div>
+                        </div>
+                        <p>Dites-moi votre budget global ou par participant, je m'adapterai ! 🎯</p>
+                    `
+                };
+            }
+            
+            // Réponse générique mais intelligente
+            return {
+                message: `
+                    <p class="mb-3">Merci pour ces informations ! 👍 Je commence à cerner votre projet.</p>
+                    <p class="mb-3">Pour vous proposer les meilleures solutions, pouvez-vous me préciser :</p>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="font-medium mb-2">🎯 Prochaines étapes :</p>
+                        <p class="text-sm">Parlez-moi de votre <strong>budget approximatif</strong> et de vos <strong>dates préférées</strong>. Cela m'aidera à vous proposer des lieux et prestataires adaptés.</p>
+                    </div>
+                `,
+                actions: () => {
+                    setTimeout(() => {
+                        showQuickActions(['budget', 'dates', 'lieu', 'participants']);
+                    }, 1000);
+                }
+            };
+        }
+        
+        // Actions rapides
+        function selectQuickAction(action) {
+            const actions = {
+                'conference': 'Je souhaite organiser une conférence professionnelle',
+                'seminaire': 'Je veux organiser un séminaire pour mes équipes', 
+                'lancement': 'Je prépare un événement de lancement produit',
+                'teambuilding': 'Je cherche à organiser un team building',
+                'autre': 'Mon projet est différent, laissez-moi vous expliquer',
+                'budget': 'Parlons du budget de mon événement',
+                'dates': 'Voici mes créneaux de dates disponibles',
+                'lieu': 'Je cherche le lieu idéal pour mon événement',
+                'participants': 'Nous serons environ X participants'
+            };
+            
+            const messageInput = document.getElementById('messageInput');
+            messageInput.value = actions[action] || action;
+            messageInput.focus();
+            document.getElementById('sendButton').disabled = false;
+        }
+        
+        function showQuickActions(actions) {
+            const quickActionsHtml = actions.map(action => 
+                `<button class="quick-action focus-visible" onclick="selectQuickAction('${action}')">${getActionLabel(action)}</button>`
+            ).join('');
+            
+            addMessage(`
+                <p class="mb-3">Ou cliquez sur l'un de these sujets :</p>
+                <div class="quick-actions">${quickActionsHtml}</div>
+            `, 'ai');
+        }
+        
+        function getActionLabel(action) {
+            const labels = {
+                'formation': '📚 Formation',
+                'motivation': '🚀 Motivation',
+                'strategie': '🎯 Stratégie',
+                'teambuilding': '🤝 Team building',
+                'budget': '💰 Budget',
+                'dates': '📅 Dates',
+                'lieu': '📍 Lieu',
+                'participants': '👥 Participants'
+            };
+            return labels[action] || action;
+        }
+        
+        // Gestion des templates
+        function showTemplates() {
+            const templateSection = document.getElementById('templateSection');
+            if (templateSection) {
+                templateSection.style.display = 'block';
+                templateSection.scrollIntoView({ behavior: 'smooth' });
+                
+                addMessage(`
+                    <p class="mb-3">💡 J'ai préparé quelques exemples de projets pour vous inspirer !</p>
+                    <p>Regardez ci-dessous et cliquez sur celui qui se rapproche le plus de votre vision. Je l'adapterai ensuite à vos besoins spécifiques.</p>
+                `, 'ai');
+            }
+        }
+        
+        function selectTemplate(templateId) {
+            // Marquer comme sélectionné visuellement
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+                card.setAttribute('aria-checked', 'false');
+            });
+            
+            event.target.closest('.template-card').classList.add('selected');
+            event.target.closest('.template-card').setAttribute('aria-checked', 'true');
+            
+            selectedTemplate = templateId;
+            
+            const templates = {
+                'conference': `Je suis inspiré par l'exemple "Conférence Tech". Voici mon projet : une conférence de 200 participants sur 2 jours avec des présentations et du networking à Paris. Budget approximatif : 50 000€.`,
+                'seminaire': `L'exemple "Séminaire Direction" correspond à mon besoin : un séminaire d'1 jour pour 50 cadres axé sur la stratégie et le team building à Lyon. Budget : 15 000€.`,
+                'lancement': `Je m'inspire de l'exemple "Lancement Produit" : un événement pour 300 invités le soir avec démonstrations et cocktail à Marseille. Budget : 80 000€.`
+            };
+            
+            const messageInput = document.getElementById('messageInput');
+            messageInput.value = templates[templateId];
+            messageInput.focus();
+            document.getElementById('sendButton').disabled = false;
+            
+            showNotification('Modèle sélectionné ! Modifiez le texte si besoin puis envoyez.', 'success');
+        }
+        
+        // Gestion des fichiers
+        function showFileUpload() {
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            fileUploadArea.style.display = 'block';
+            fileUploadArea.scrollIntoView({ behavior: 'smooth' });
+            
+            addMessage(`
+                <p class="mb-3">📄 Parfait ! Si vous avez déjà des documents (brief, présentation, notes...), je peux les analyser.</p>
+                <p>Glissez votre fichier dans la zone ci-dessous ou cliquez pour le sélectionner. Je saurai en extraire les informations importantes pour votre projet ! 🎯</p>
+            `, 'ai');
+        }
+        
+        function triggerFileUpload() {
+            document.getElementById('fileInput').click();
+        }
+        
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validation du fichier
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification('Le fichier est trop volumineux (max. 10MB)', 'error');
+                return;
+            }
+            
+            uploadedFile = file;
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            fileUploadArea.classList.add('has-file');
+            fileUploadArea.innerHTML = `
+                <div class="text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <p class="font-medium text-green-700 mb-1">Fichier téléchargé : ${file.name}</p>
+                    <p class="text-sm text-gray-500">${(file.size / 1024 / 1024).toFixed(1)}MB • ${file.type || 'Type inconnu'}</p>
+                    <button class="mt-2 text-sm text-blue-600 hover:underline" onclick="removeFile()">Supprimer</button>
+                </div>
+            `;
+            
+            // Simuler l'analyse du fichier
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addMessage(`
+                    <p class="mb-3">✨ J'ai analysé votre document "${file.name}" !</p>
+                    <div class="bg-green-50 p-4 rounded-lg mb-3">
+                        <p class="font-medium mb-2">📋 Ce que j'ai trouvé :</p>
+                        <ul class="text-sm space-y-1 list-disc list-inside">
+                            <li>Informations sur votre événement détectées</li>
+                            <li>Éléments de budget identifiés</li>
+                            <li>Contraintes et préférences notées</li>
+                        </ul>
+                    </div>
+                    <p>Maintenant, décrivez-moi en quelques mots vos priorités et objectifs principaux. Je combinerai tout cela ! 🚀</p>
+                `, 'ai');
+            }, 2000);
+            
+            showNotification('Fichier téléchargé avec succès ! Analyse en cours...', 'success');
+        }
+        
+        function removeFile() {
+            uploadedFile = null;
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            fileUploadArea.classList.remove('has-file');
+            fileUploadArea.innerHTML = `
+                <div class="text-center">
+                    <div class="text-3xl mb-2">📄</div>
+                    <p class="font-medium text-gray-700 mb-1">Glissez votre document ici ou cliquez pour le sélectionner</p>
+                    <p class="text-sm text-gray-500">PDF, DOC, DOCX, TXT (max. 10MB)</p>
+                </div>
+            `;
+        }
+        
+        function setupDragAndDrop() {
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            
+            if (!fileUploadArea) {
+                console.log('Element fileUploadArea non trouvé - fonctionnalité drag & drop non disponible');
+                return;
+            }
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            function highlight(e) {
+                fileUploadArea.classList.add('drag-over');
+            }
+            
+            function unhighlight(e) {
+                fileUploadArea.classList.remove('drag-over');
+            }
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                fileUploadArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            fileUploadArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length > 0) {
+                    const event = { target: { files: files } };
+                    handleFileUpload(event);
+                }
+            }
+        }
+        
+        // Indicateur de saisie
+        function showTypingIndicator() {
+            if (isTyping) return;
+            isTyping = true;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message message-ai mb-6';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-sm font-semibold">AI</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-sm font-semibold text-gray-700">Assistant IA</span>
+                        </div>
+                        <div class="bg-white rounded-xl p-4">
+                            <div class="typing-indicator">
+                                <div class="typing-dots">
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+        
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            isTyping = false;
+        }
+        
+        // Utilitaires
+        function handleKeydown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            const maxHeight = 120;
+            const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+            textarea.style.height = newHeight + 'px';
+            
+            // Enable send button if there's content
+            const sendButton = document.getElementById('sendButton');
+            if (sendButton) {
+                sendButton.disabled = textarea.value.trim().length === 0;
+            }
+        }
+        
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Generate result function for the analyze button
+        function generateResult() {
+            const messageInput = document.getElementById('messageInput');
+            let description = '';
+            
+            // Compile conversation history or current input
+            if (conversationHistory.length > 0) {
+                description = "Conversation avec l'assistant IA :\n\n";
+                conversationHistory.forEach((msg, index) => {
+                    const role = msg.sender === 'user' ? 'UTILISATEUR' : 'ASSISTANT IA';
+                    description += `${role} : ${msg.content}\n\n`;
+                });
+            } else if (messageInput && messageInput.value.trim()) {
+                description = "Description du projet: " + messageInput.value.trim();
+            }
+            
+            if (!description.trim()) {
+                showNotification("⚠️ Veuillez d'abord discuter avec l'assistant IA ou saisir une description de votre projet", "warning");
+                if (messageInput) {
+                    messageInput.focus();
+                    messageInput.placeholder = "Décrivez votre projet en quelques lignes pour continuer...";
+                }
+                return;
+            }
+            
+            // Store project description globally
+            window.projectDescription = description;
+            
+            showNotification("✅ Projet soumis ! Analyse IA en cours...");
+            
+            console.log('Description du projet:', description);
+            
+            // Simulation d'envoi
+            setTimeout(() => {
+                showNotification("🔮 Analyse terminée ! Redirection vers les résultats...");
+                // Redirection vers la page de résultats
+                setTimeout(() => {
+                    window.location.href = 'studio-evento-results.html';
+                }, 1000);
+            }, 2500);
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notification.className = `notification ${type}`;
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, type === 'error' ? 6000 : 4000);
+        }
+        
+        // Aide
+        function showHelp() {
+            addMessage(`
+                <p class="mb-3">🎯 <strong>Comment bien utiliser cet assistant ?</strong></p>
+                <div class="bg-blue-50 p-4 rounded-lg mb-3">
+                    <p class="font-medium mb-2">💡 Conseils pratiques :</p>
+                    <ul class="text-sm space-y-2 list-disc list-inside">
+                        <li><strong>Soyez précis</strong> : Plus vous donnez de détails, meilleures seront mes recommandations</li>
+                        <li><strong>Mentionnez le budget</strong> : Cela m'aide énormément pour filtrer les options</li>
+                        <li><strong>Parlez de vos contraintes</strong> : dates, lieu, nombre de participants</li>
+                        <li><strong>Décrivez l'ambiance souhaitée</strong> : formelle, décontractée, créative...</li>
+                    </ul>
+                </div>
+                <p class="text-sm">🤖 Je suis là pour vous accompagner à chaque étape ! N'hésitez pas à me poser toutes vos questions.</p>
+            `, 'ai');
+        }
+        
+        // Fallback pour les erreurs API
+        function handleAPIError() {
+            console.warn('API /api/chef-projet non disponible - Mode dégradé activé');
+            showNotification('Mode démonstration activé - Fonctionnalités simulées', 'warning');
+            
+            // On peut continuer avec la logique de simulation
+            return true;
+        }
+        
+        // Sauvegarde locale de la conversation
+        function saveConversationLocally() {
+            try {
+                localStorage.setItem('studio-evento-conversation', JSON.stringify({
+                    history: conversationHistory,
+                    timestamp: Date.now(),
+                    template: selectedTemplate,
+                    hasFile: !!uploadedFile
+                }));
+            } catch (e) {
+                console.warn('Impossible de sauvegarder la conversation localement');
+            }
+        }
+        
+        function loadConversationFromLocal() {
+            try {
+                const saved = localStorage.getItem('studio-evento-conversation');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    // Recharger seulement si récente (moins de 1h)
+                    if (Date.now() - data.timestamp < 3600000) {
+                        return data;
+                    }
+                }
+            } catch (e) {
+                console.warn('Impossible de charger la conversation sauvegardée');
+            }
+            return null;
+        }
+        
+        // Sauvegarder automatiquement
+        setInterval(saveConversationLocally, 30000); // Toutes les 30 secondes
+        
+        // Analytics simulation
+        function trackInteraction(action, details = {}) {
+            console.log(`📈 Analytics: ${action}`, details);
+            
+            // Ici vous pourriez envoyer à Google Analytics, Mixpanel, etc.
+            if (typeof gtag !== 'undefined') {
+                gtag('event', action, {
+                    event_category: 'chat_interaction',
+                    ...details
+                });
+            }
+        }
+        
+        // Améliorer l'accessibilité
+        document.addEventListener('keydown', function(event) {
+            // Raccourci clavier pour envoyer (Ctrl/Cmd + Enter)
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                sendMessage();
+            }
+            
+            // Échap pour fermer les templates
+            if (event.key === 'Escape') {
+                const templateSection = document.getElementById('templateSection');
+                if (templateSection.style.display !== 'none') {
+                    templateSection.style.display = 'none';
+                }
+            }
+        });
+
+        // Fonctions d'authentification
+        window.signOut = function() {
+            if (window.firebase && window.firebase.auth()) {
+                window.firebase.auth().signOut().then(() => {
+                    console.log('Utilisateur déconnecté');
+                }).catch((error) => {
+                    console.error('Erreur lors de la déconnexion:', error);
+                });
+            }
+        };
+
+        window.toggleUserMenu = function() {
+            const menu = document.getElementById('userMenu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            }
+        };
+
+        window.startFreeTrial = function() {
+            if (isUserAuthenticated()) {
+                // Utilisateur déjà connecté
+                console.log('Utilisateur déjà authentifié');
+            } else {
+                // Afficher la modal d'authentification
+                showAuthModal();
+            }
+        };
+
+        window.showPage = function(pageName) {
+            if (pageName === 'dashboard') {
+                console.log('Redirection vers le dashboard utilisateur');
+            } else if (pageName === 'home') {
+                window.location.href = 'studio-evento.html';
+            }
+        };
+    </script>
+
+    <!-- Firebase Auth -->
+    <script src="firebase-auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Event - Concevez votre événement personnalisé</title>
+    
+    <!-- Montserrat Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind personnalisée -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'display': ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'google-blue': '#1a73e8',
+                        'google-blue-hover': '#1b66c9',
+                        'google-green': '#34a853',
+                        'google-red': '#ea4335',
+                        'google-yellow': '#fbbc04',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- CSS personnalisé Google I/O avec dégradés -->
+    <style>
+        /* Composants CTA avec police Montserrat */
+        .cta-primary {
+            display: block;
+            min-width: 100px;
+            max-width: fit-content;
+            border-radius: 100px;
+            padding: 14px 20px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 100%;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cta-primary:hover {
+            background-color: #1b66c9;
+            box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        }
+        
+        .cta-outlined {
+            display: block;
+            min-width: 100px;
+            max-width: fit-content;
+            border-radius: 100px;
+            padding: 14px 20px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 100%;
+            background-color: transparent;
+            color: #4285f4;
+            border: 1.2px solid #4285f4;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .cta-outlined:hover {
+            background-color: #dbeafe;
+        }
+        
+        /* Cartes avec bordures dégradées */
+        .gradient-card {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            padding: 3px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .gradient-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gradient-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 3px;
+            background: var(--gradient);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+        }
+        
+        .gradient-card-content {
+            position: relative;
+            background: white;
+            border-radius: 13px;
+            padding: 24px;
+            height: 100%;
+        }
+        
+        /* Dégradés spécifiques pour les 2 cartes */
+        .gradient-time {
+            --gradient: linear-gradient(135deg, #ff6d00 0%, #9c27b0 100%);
+        }
+        
+        .gradient-creativity {
+            --gradient: linear-gradient(135deg, #34a853 0%, #e91e63 100%);
+        }
+        
+
+        
+        /* Logo avec dégradé multicolore */
+        .logo-gradient {
+            background: linear-gradient(45deg, #4285f4, #9c27b0, #e91e63, #ff6d00, #34a853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        /* Calculateur ROI avec style moderne */
+        .roi-calculator {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 30px 0;
+        }
+        
+        .roi-result {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+        
+
+        
+        /* Styles pour les sliders */
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #1a73e8;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .slider-value {
+            background: #1a73e8;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        @media (min-width: 768px) {
+            .cta-primary, .cta-outlined {
+                padding: 16px 34px;
+            }
+        }
+        
+        @media (min-width: 960px) {
+            .cta-primary, .cta-outlined {
+                font-size: 20px;
+            }
+        }
+
+        /* Styles pour l'authentification utilisateur */
+        .auth-nav-btn {
+            position: relative;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 160px;
+            z-index: 1000;
+        }
+
+        .user-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu button:hover {
+            background-color: #f3f4f6;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1b66c9;
+        }
+
+    </style>
+</head>
+<body class="font-sans bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    
+
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-5 md:px-10" style="padding-top: 0; padding-bottom: 0;">
+            <nav class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img src="votre-logo.png" alt="Studio Event" class="h-48 w-auto object-contain" style="max-width: 600px;">
+                </div>
+                <div class="hidden md:flex space-x-8 nav-buttons">
+                    <button class="text-gray-700 hover:text-google-blue font-medium" onclick="showPage('home')">Accueil</button>
+                    <button class="text-gray-700 hover:text-google-blue font-medium" onclick="showPage('pricing')" id="pricingBtn">Tarifs</button>
+                    <button class="cta-primary" onclick="startDemo()">Essai Gratuit</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="container mx-auto px-5 md:px-10 py-16">
+        
+        <!-- Page d'accueil -->
+        <div class="page active" id="home">
+            <!-- Hero Section -->
+            <div class="text-center max-w-4xl mx-auto mb-16">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-gray-900 mb-6">
+                    🎬 Concevez votre événement personnalisé en quelques clics
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    L'IA donne des idées, <strong>Studio Event livre du concret</strong>
+                </p>
+              </div>
+
+            <!-- 2 cartes de défis -->
+            <div class="grid md:grid-cols-2 gap-6 mb-16">
+                <div class="gradient-card gradient-time" onclick="handleNoCahierDesCharges()" style="cursor: pointer;">
+                    <div class="gradient-card-content">
+                        <div class="text-3xl mb-4">⏰</div>
+                        <h3 class="font-bold text-xl mb-3">"Je n'ai pas de cahier des charges"</h3>
+                        <p class="text-gray-600">→ Modules Opérationnels prioritaires</p>
+                    </div>
+                </div>
+                
+                <div class="gradient-card gradient-creativity" onclick="handleAvecCahierDesCharges()" style="cursor: pointer;">
+                    <div class="gradient-card-content">
+                        <div class="text-3xl mb-4">🎨</div>
+                        <h3 class="font-bold text-xl mb-3">"J'ai un cahier des charges"</h3>
+                        <p class="text-gray-600">→ Modules Création prioritaires</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Calculateur ROI -->
+            <div class="roi-calculator">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">🧮 Calculez vos économies en 10 secondes</h3>
+                    <p class="text-gray-600">Découvrez combien Studio Event vous fait économiser par an</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-4">Nombre d'événements par an</label>
+                        <input type="range" class="slider" id="eventsSlider" min="1" max="50" value="6" oninput="updateCalculator()">
+                        <div class="slider-value mt-2" id="eventsValue">6 événements</div>
+                    </div>
+                    
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-4">Temps de préparation par événement</label>
+                        <input type="range" class="slider" id="timeSlider" min="5" max="40" value="15" oninput="updateCalculator()">
+                        <div class="slider-value mt-2" id="timeValue">15 heures</div>
+                    </div>
+                </div>
+                
+                <div class="roi-result text-center">
+                    <h4 class="text-xl font-bold text-green-700 mb-4">💰 Vos économies annuelles avec Studio Event</h4>
+                    <div class="text-4xl font-bold text-green-600 mb-6" id="savingsTotal">8 450€</div>
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-lg">
+                            <div class="text-xl font-bold text-green-600" id="timeSavedCalc">75h</div>
+                            <div class="text-sm text-gray-600">temps économisé</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg">
+                            <div class="text-xl font-bold text-green-600" id="costSaved">7 500€</div>
+                            <div class="text-sm text-gray-600">valeur temps</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg">
+                            <div class="text-xl font-bold text-green-600" id="budgetSavedCalc">950€</div>
+                            <div class="text-sm text-gray-600">économies budget</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="text-center mt-12">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button class="cta-primary" onclick="startDemo()">
+                        🚀 Commencer maintenant
+                    </button>
+                    <button class="cta-outlined" onclick="showPage('pricing')">
+                        💰 Voir les tarifs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-5 md:px-10 text-center">
+            <p class="text-gray-400 font-medium">
+                Studio Event - La solution IA clé en main pour créer vos événements
+            </p>
+        </div>
+    </footer>
+
+    <!-- Firebase Auth -->
+    <script src="firebase-auth.js"></script>
+
+    <script>
+        // Variables globales
+        let currentPage = 'home';
+        
+        // Calculateur ROI
+        function updateCalculator() {
+            const events = document.getElementById('eventsSlider').value;
+            const timePerEvent = document.getElementById('timeSlider').value;
+            
+            // Mise à jour des affichages
+            document.getElementById('eventsValue').textContent = events + ' événements';
+            document.getElementById('timeValue').textContent = timePerEvent + ' heures';
+            
+            // Calculs
+            const totalHours = events * timePerEvent;
+            const timeSaved = Math.round(totalHours * 0.8); // 80% de temps économisé
+            const hourlyRate = 100; // 100€/heure
+            const valueSaved = timeSaved * hourlyRate;
+            const budgetSaved = events * 150; // 150€ d'économies budget par événement
+            const totalSaved = valueSaved + budgetSaved;
+            
+            // Mise à jour de l'affichage
+            document.getElementById('timeSavedCalc').textContent = timeSaved + 'h';
+            document.getElementById('costSaved').textContent = valueSaved.toLocaleString() + '€';
+            document.getElementById('budgetSavedCalc').textContent = budgetSaved.toLocaleString() + '€';
+            document.getElementById('savingsTotal').textContent = totalSaved.toLocaleString() + '€';
+        }
+
+        
+        // Fonctions de navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                page.style.display = 'none';
+            });
+            
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                targetPage.classList.add('active');
+            }
+            
+            currentPage = pageId;
+        }
+        
+        function startDemo() {
+            alert('Démo à venir ! Studio Event sera bientôt disponible.');
+        }
+
+        // Handle "Je n'ai pas de cahier des charges" click
+        function handleNoCahierDesCharges() {
+            if (isUserAuthenticated()) {
+                // User is already authenticated, redirect to step2
+                window.location.href = 'studio-evento-step2.html';
+            } else {
+                // Show auth modal with callback to redirect to step2
+                showAuthModal(function() {
+                    window.location.href = 'studio-evento-step2.html';
+                });
+            }
+        }
+
+        // Handle "J'ai un cahier des charges" click
+        function handleAvecCahierDesCharges() {
+            if (isUserAuthenticated()) {
+                // User is already authenticated, redirect to step3
+                window.location.href = 'studio-evento-step3.html';
+            } else {
+                // Show auth modal with callback to redirect to step3
+                showAuthModal(function() {
+                    window.location.href = 'studio-evento-step3.html';
+                });
+            }
+        }
+
+        // Fonction pour se déconnecter
+        window.signOut = function() {
+            if (window.firebase && window.firebase.auth()) {
+                window.firebase.auth().signOut().then(() => {
+                    console.log('Utilisateur déconnecté');
+                    // L'UI sera mise à jour automatiquement par l'auth state listener
+                }).catch((error) => {
+                    console.error('Erreur lors de la déconnexion:', error);
+                });
+            }
+        };
+
+        // Fonction pour afficher les pages (dashboard, etc.)
+        window.showPage = function(pageName) {
+            if (pageName === 'dashboard') {
+                console.log('Redirection vers le dashboard utilisateur');
+                // Ici vous pouvez rediriger vers une page de dashboard
+                // window.location.href = 'dashboard.html';
+            } else if (pageName === 'home') {
+                // Scroll vers le haut ou actualiser la page
+                window.scrollTo(0, 0);
+            } else if (pageName === 'pricing') {
+                // Afficher la section tarifs si elle existe
+                console.log('Affichage des tarifs');
+            }
+        };
+
+        // Fonction pour démarrer l'essai gratuit (remplace startDemo)
+        window.startFreeTrial = function() {
+            if (isUserAuthenticated()) {
+                // Utilisateur déjà connecté, rediriger vers l'application
+                handleNoCahierDesCharges();
+            } else {
+                // Afficher la modal d'authentification
+                showAuthModal(function() {
+                    handleNoCahierDesCharges();
+                });
+            }
+        };
+
+        // Alias pour la compatibilité
+        window.startDemo = window.startFreeTrial;
+
+        
+        // Initialisation
+        updateCalculator();
+    </script>
+
+</body>
+</html>

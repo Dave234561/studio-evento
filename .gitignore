@@ -67,7 +67,7 @@ logs
 
 # Gatsby files
 .cache/
-public
+# public - Commenté car Next.js a besoin du dossier public
 
 # Storybook build outputs
 .out

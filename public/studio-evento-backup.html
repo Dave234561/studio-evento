@@ -1,0 +1,3272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Evento - MVP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Pages principales */
+        .page {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            min-height: 80vh;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header avec navigation */
+        .header {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .demo-video {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px dashed #2196F3;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        /* Modules grid améliorés */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .module-card {
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .module-card:hover {
+            border-color: #4CAF50;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .module-card.selected {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #f8fff8, #f0f8f0);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.2);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .module-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .module-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .module-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .module-value {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #4CAF50;
+            margin: 15px 0;
+        }
+
+        .module-value h5 {
+            color: #2e7d32;
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .module-value p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .module-advantages {
+            margin: 15px 0;
+        }
+
+        .module-advantages h6 {
+            color: #333;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .advantage-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .advantage-item .check {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-top: 1px;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-example {
+            background: transparent;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-example:hover {
+            background: #4CAF50;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-select {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-grow: 1;
+        }
+
+        .btn-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Pricing cards améliorées */
+        .pricing-card {
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .pricing-card.popular {
+            border-color: #4CAF50;
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(76, 175, 80, 0.2);
+        }
+
+        .pricing-card.popular::before {
+            content: "⭐ POPULAIRE";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .pricing-card.team {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+        }
+
+        .pricing-card.team::before {
+            content: "👥 ÉQUIPE";
+            background: #FF9800;
+        }
+
+        .price-container {
+            margin: 20px 0;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .price-annual {
+            font-size: 2.2rem;
+            color: #2e7d32;
+        }
+
+        .price-unit {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .price-save {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        /* Nouvelles sections crédibilité */
+        .trust-metrics {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-item {
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .metric-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .logos-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .logos-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+            opacity: 0.7;
+        }
+
+        .client-logo {
+            width: 80px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .differentiator {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border-left: 5px solid #4CAF50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .differentiator h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .time-comparison {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .time-before, .time-after {
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .time-before {
+            background: #ffebee;
+            border: 2px solid #f44336;
+        }
+
+        .time-after {
+            background: #e8f5e8;
+            border: 2px solid #4CAF50;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .privacy-badge {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px solid #2196F3;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .privacy-badge h5 {
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .fomo-alert {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left: 5px solid #FF9800;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .email-gate {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border: 3px solid #9c27b0;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            margin: 15px auto;
+        }
+
+        .email-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #9c27b0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .email-submit {
+            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .expert-service {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c8);
+            border: 3px solid #4CAF50;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Calculator ROI */
+        .roi-calculator {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 3px solid #FF9800;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .input-group {
+            text-align: left;
+        }
+
+        .input-label {
+            font-weight: bold;
+            color: #E65100;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .slider-container {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #FF9800;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #FF9800;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .slider-value {
+            background: #FF9800;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .roi-result {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c8);
+            border: 3px solid #4CAF50;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+        }
+
+        .roi-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 10px 0;
+        }
+
+        .roi-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .roi-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .roi-item-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .roi-item-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Exit Intent Popup */
+        .exit-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .exit-popup.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .popup-close:hover {
+            color: #333;
+        }
+
+        .popup-title {
+            font-size: 1.8rem;
+            color: #d32f2f;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .popup-offer {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c8);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .popup-form {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .popup-email {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .popup-submit {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .popup-bonus {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #FF9800;
+        }
+
+        /* Social Proof en temps réel */
+        .social-proof-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 1002;
+            max-width: 350px;
+            transform: translateX(-400px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .social-proof-notification.show {
+            transform: translateX(0);
+        }
+
+        .social-proof-notification:hover {
+            transform: translateX(0) translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .notification-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .notification-info {
+            flex: 1;
+        }
+
+        .notification-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .notification-location {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .notification-action {
+            color: #2e7d32;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 0.8rem;
+            text-align: right;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-close:hover {
+            color: #666;
+        }
+
+        .social-proof-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsive pour social proof */
+        @media (max-width: 768px) {
+            .social-proof-notification {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                transform: translateY(100px);
+            }
+            
+            .social-proof-notification.show {
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 768px) {
+            .calculator-inputs {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .roi-breakdown {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .popup-content {
+                margin: 10px;
+                padding: 25px;
+            }
+            
+            .popup-form {
+                flex-direction: column;
+            }
+            
+            .roi-number {
+                font-size: 2rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .time-comparison {
+                flex-direction: column;
+            }
+            
+            .email-form {
+                flex-direction: column;
+            }
+            
+            .logos-grid {
+                gap: 15px;
+            }
+            
+            .client-logo {
+                width: 60px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .module-card {
+                padding: 25px;
+            }
+            
+            .module-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .module-icon {
+                font-size: 2.5rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .smart-input {
+            background: #f8f9fa;
+            border: 3px dashed #4CAF50;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .smart-input:hover {
+            background: #f0f8f0;
+            border-color: #45a049;
+        }
+
+        .template-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-left: 5px solid #2196F3;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        /* Result preview */
+        .result-container {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .result-content {
+            line-height: 1.6;
+        }
+
+        .blur-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.95));
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        /* Loading animation */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Pricing cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card.recommended {
+            border-color: #4CAF50;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.free {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 15px 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .feature-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .feature-list li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Progress tracker */
+        .progress-tracker {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 250px;
+            z-index: 1000;
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .progress-icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .completed { background: #28a745; color: white; }
+        .current { background: #ffc107; color: white; }
+        .pending { background: #e9ecef; color: #666; }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .dashboard-main {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .dashboard-sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .module-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .module-status:hover {
+            background: #f8f9fa;
+        }
+
+        .status-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Payment methods */
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .payment-btn {
+            background: #000;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .payment-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .progress-tracker {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Animation utilities */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Styles pour l'authentification utilisateur */
+        .auth-nav-btn {
+            position: relative;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 160px;
+            z-index: 1000;
+        }
+
+        .user-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu button:hover {
+            background-color: #f3f4f6;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1b66c9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <div class="header">
+        <div class="logo">🎬 Studio Evento</div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="showPage('home')">Accueil</button>
+            <button class="btn btn-secondary" onclick="showPage('dashboard')" id="dashboardBtn" style="display: none;">Dashboard</button>
+            <button class="btn btn-primary" onclick="startFreeTrial()">Essai Gratuit</button>
+        </div>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="progress-tracker" id="progressTracker">
+        <h4 style="margin-bottom: 15px;">📊 Progression</h4>
+        <div class="progress-item">
+            <div class="progress-icon completed">✓</div>
+            <span>Accueil</span>
+        </div>
+        <div class="progress-item">
+            <div class="progress-icon current" id="step2">2</div>
+            <span>Module</span>
+        </div>
+        <div class="progress-item">
+            <div class="progress-icon pending" id="step3">3</div>
+            <span>Saisie</span>
+        </div>
+        <div class="progress-item">
+            <div class="progress-icon pending" id="step4">4</div>
+            <span>Résultat</span>
+        </div>
+        <div class="progress-item">
+            <div class="progress-icon pending" id="step5">5</div>
+            <span>Paiement</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Page 1: Accueil avec essai gratuit -->
+        <div class="page active" id="home">
+            <div class="hero">
+                <h1>🎬 Concevez votre événement personnalisé en un temps record</h1>
+                <p>L'IA donne des idées, <strong>Studio Evento livre du concret</strong></p>
+                
+                <!-- Liens discrets admin et chat -->
+                <div class="admin-links" style="position: absolute; top: 10px; right: 10px; opacity: 0.3; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.3'">
+                    <a href="/chat" style="color: #666; text-decoration: none; font-size: 0.8rem; margin-right: 10px; padding: 5px;" title="Chat Orchestrateur">💬</a>
+                    <a href="/admin" style="color: #666; text-decoration: none; font-size: 0.8rem; padding: 5px;" title="Interface Admin">⚙️</a>
+                </div>
+                
+                <!-- Métriques de crédibilité -->
+                <div class="trust-metrics">
+                    <h4 style="margin-bottom: 20px; color: #333;">🏆 Déjà adopté par les professionnels</h4>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-number">1,247</div>
+                            <div class="metric-label">événements créés</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-number">4.8/5</div>
+                            <div class="metric-label">satisfaction client</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-number">14,000</div>
+                            <div class="metric-label">lieux référencés</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-number">500+</div>
+                            <div class="metric-label">professionnels actifs</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Logos clients anonymisés -->
+                    <div class="logos-section">
+                        <p style="margin-bottom: 15px; color: #666; font-size: 0.9rem;">Utilisé par :</p>
+                        <div class="logos-grid">
+                            <div class="client-logo">TECH★★★</div>
+                            <div class="client-logo">PHARMA+</div>
+                            <div class="client-logo">FINANCE◆</div>
+                            <div class="client-logo">CONSEIL▲</div>
+                            <div class="client-logo">START●UP</div>
+                            <div class="client-logo">EVENTS■</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Différenciation -->
+                <div class="differentiator">
+                    <h4>💎 Notre différence unique</h4>
+                    <p><strong>Base de données propriétaire :</strong> 14,000 lieux référencés avec tarifs temps réel</p>
+                    <p><strong>Benchmark automatique :</strong> Votre budget vs 500 événements similaires</p>
+                    <p><strong>Données natives RGPD :</strong> Vos données effacées après traitement</p>
+                </div>
+
+                <!-- Comparaison temps -->
+                <div class="time-comparison">
+                    <div class="time-before">
+                        <div style="font-size: 1.2rem; color: #d32f2f; font-weight: bold;">15h</div>
+                        <div style="font-size: 0.9rem;">Préparation manuelle</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="time-after">
+                        <div style="font-size: 1.2rem; color: #388e3c; font-weight: bold;">30min</div>
+                        <div style="font-size: 0.9rem;">Avec Studio Evento</div>
+                    </div>
+                </div>
+
+                <!-- FOMO professionnel -->
+                <div class="fomo-alert">
+                    <p><strong>🔥 Rejoignez 500+ event managers qui économisent déjà</strong></p>
+                    <p style="font-size: 0.9rem; margin-top: 8px;">Dernière inscription il y a 23 minutes</p>
+                </div>
+
+                <!-- Calculator ROI -->
+                <div class="roi-calculator">
+                    <h3 style="color: #E65100; margin-bottom: 20px;">🧮 Calculez vos économies en 10 secondes</h3>
+                    <p style="margin-bottom: 25px; color: #666;">Découvrez combien Studio Evento vous fait économiser par an</p>
+                    
+                    <div class="calculator-inputs">
+                        <div class="input-group">
+                            <label class="input-label">Nombre d'événements par an</label>
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="eventsSlider" min="1" max="50" value="6" oninput="updateCalculator()">
+                                <div class="slider-value" id="eventsValue">6 événements</div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Temps de préparation par événement</label>
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="timeSlider" min="5" max="40" value="15" oninput="updateCalculator()">
+                                <div class="slider-value" id="timeValue">15 heures</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="roi-result" id="roiResult">
+                        <h4 style="color: #2e7d32; margin-bottom: 15px;">💰 Vos économies annuelles avec Studio Evento</h4>
+                        <div class="roi-number" id="savingsTotal">8 450€</div>
+                        
+                        <div class="roi-breakdown">
+                            <div class="roi-item">
+                                <div class="roi-item-value" id="timeSaved">75h</div>
+                                <div class="roi-item-label">temps économisé</div>
+                            </div>
+                            <div class="roi-item">
+                                <div class="roi-item-value" id="costSaved">7 500€</div>
+                                <div class="roi-item-label">valeur temps</div>
+                            </div>
+                            <div class="roi-item">
+                                <div class="roi-item-value" id="budgetSaved">950€</div>
+                                <div class="roi-item-label">économies budget</div>
+                            </div>
+                            <div class="roi-item">
+                                <div class="roi-item-value">380%</div>
+                                <div class="roi-item-label">ROI moyen</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="margin-top: 20px; font-size: 1.1rem;" onclick="startFreeTrial()">
+                            🚀 Commencer à économiser maintenant !
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="demo-video">
+                    <h3>🎥 Découvrez la puissance de notre IA</h3>
+                    <p style="margin: 15px 0;"><strong>Exemple concret :</strong> "Séminaire commercial 80 personnes" → IA génère lieu, budget, planning en 2 minutes</p>
+                    <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <strong>💎 Valeur unique :</strong> Notre IA analyse votre contexte et génère des recommandations personnalisées avec contacts directs, comparatifs détaillés et exports professionnels
+                    </div>
+                    <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <strong>Témoignage client :</strong> "J'ai économisé 15 heures de préparation pour mon dernier séminaire !" - Marie, DRH chez TechCorp
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                        <div style="text-align: center; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 10px;">
+                            <div style="font-size: 1.5rem; color: #4CAF50; font-weight: bold;">9 modules</div>
+                            <div style="font-size: 0.9rem; color: #666;">spécialisés</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 10px;">
+                            <div style="font-size: 1.5rem; color: #4CAF50; font-weight: bold;">2 minutes</div>
+                            <div style="font-size: 0.9rem; color: #666;">de génération</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 10px;">
+                            <div style="font-size: 1.5rem; color: #4CAF50; font-weight: bold;">PDF pro</div>
+                            <div style="font-size: 0.9rem; color: #666;">exportable</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 40px 0;">
+                    <button class="btn btn-primary" style="font-size: 1.4rem; padding: 20px 40px;" onclick="startFreeTrial()">
+                        🎁 TESTER GRATUITEMENT (1 module au choix)
+                    </button>
+                    <br><br>
+                    <button class="btn btn-secondary" onclick="showOnboarding()">
+                        💡 Je découvre comment ça marche
+                    </button>
+                </div>
+
+                <!-- Badge RGPD -->
+                <div class="privacy-badge">
+                    <h5>🔒 DONNÉES NATIVES - SOLUTION 100% RGPD</h5>
+                    <p style="font-size: 0.9rem; margin: 0;">Vos données ne sont pas partagées et effacées directement après votre requête</p>
+                </div>
+
+                <div style="background: rgba(40, 167, 69, 0.1); padding: 20px; border-radius: 15px; border-left: 5px solid #28a745;">
+                    ✅ Aucune carte bancaire requise • ✅ Test immédiat • ✅ Résultat en 2 minutes
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Onboarding "Comment ça marche" -->
+        <div class="page" id="onboarding">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2>🧭 Comment ça marche ? Laissez-vous guider</h2>
+                <p>Un processus simple en 4 étapes pour créer votre événement parfait</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin: 40px 0;">
+                <div style="text-align: center; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">1️⃣</div>
+                    <h3>Choisissez votre défi</h3>
+                    <p style="color: #666; margin-top: 10px;">9 modules selon vos besoins spécifiques</p>
+                </div>
+                <div style="text-align: center; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">2️⃣</div>
+                    <h3>Décrivez votre projet</h3>
+                    <p style="color: #666; margin-top: 10px;">Texte libre ou document, nous nous adaptons</p>
+                </div>
+                <div style="text-align: center; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">3️⃣</div>
+                    <h3>L'IA génère</h3>
+                    <p style="color: #666; margin-top: 10px;">Résultat personnalisé en moins de 2 minutes</p>
+                </div>
+                <div style="text-align: center; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">4️⃣</div>
+                    <h3>Testez gratuitement</h3>
+                    <p style="color: #666; margin-top: 10px;">Puis achetez seulement si convaincu</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 30px;" onclick="showModuleSelection()">
+                    🚀 Commencer maintenant
+                </button>
+                <br><br>
+                <button class="btn btn-secondary" onclick="showPage('home')">
+                    ← Retour à l'accueil
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 3: Sélection du module -->
+        <div class="page" id="moduleSelection">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2>🎯 Quel est votre principal défi pour cet événement ?</h2>
+                <p>Choisissez le module qui correspond le mieux à vos besoins</p>
+            </div>
+
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Les modules seront générés dynamiquement par JavaScript -->
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; font-style: italic; color: #666;">
+                "Pas de souci, nous créerons les autres éléments ensemble ensuite !"
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="showPage('home')">← Retour à l'accueil</button>
+            </div>
+        </div>
+
+        <!-- Page 4: Saisie du projet -->
+        <div class="page" id="projectInput">
+            <div style="margin-bottom: 30px;">
+                <h2><span id="selectedModuleTitle">Votre module</span></h2>
+                <p>Décrivez votre événement pour obtenir un résultat personnalisé</p>
+            </div>
+
+            <div class="smart-input" onclick="focusTextarea()">
+                <h3>📋 Décrivez votre événement (ou) glissez votre document ici</h3>
+                <p style="color: #666; margin: 15px 0;">
+                    💡 Plus vous donnez de détails, plus le résultat sera précis<br>
+                    📎 Le dépôt de document permet une analyse <strong>plus personnalisée</strong>
+                </p>
+                <textarea id="projectDescription" 
+                         placeholder="Ex: Séminaire commercial 2 jours, 80 personnes, Lyon, budget 25k€..." 
+                         style="width: 100%; height: 120px; border: 2px dashed #ccc; border-radius: 10px; padding: 15px; font-size: 1rem; margin-top: 15px; resize: vertical;"></textarea>
+                <div style="margin-top: 15px;">
+                    <input type="file" id="fileUpload" style="display: none;" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload()">
+                    <button class="btn btn-secondary" onclick="document.getElementById('fileUpload').click()">
+                        📎 Ou déposer un document
+                    </button>
+                    <span id="fileName" style="margin-left: 10px; color: #28a745; font-weight: bold;"></span>
+                </div>
+            </div>
+
+            <div class="template-box">
+                <h4>💡 Besoin d'inspiration ? Utilisez ce template :</h4>
+                <p><strong>Type d'événement :</strong> [Séminaire / Soirée / Conférence / ...]</p>
+                <p><strong>Nombre de participants :</strong> [50-100 / 100-250 / 250+ personnes]</p>
+                <p><strong>Lieu souhaité :</strong> [Ville / Région / À déterminer]</p>
+                <p><strong>Budget approximatif :</strong> [5-15k€ / 15-50k€ / 50k€+ / À définir]</p>
+                <p><strong>Objectifs spécifiques :</strong> [Formation / Team building / Lancement produit / ...]</p>
+                <button class="btn btn-secondary" onclick="useTemplate()">✨ Utiliser ce template</button>
+                <button class="btn btn-primary" onclick="generateResult()">🔮 Analyser avec l'IA</button>
+            </div>
+
+            <div style="background: rgba(40, 167, 69, 0.1); padding: 15px; border-radius: 10px; border-left: 5px solid #28a745; margin-top: 20px;">
+                💾 Votre progression est automatiquement sauvegardée (même en mode invité)
+            </div>
+        </div>
+
+        <!-- Page 5: Génération et résultat -->
+        <div class="page" id="result">
+            <div id="loadingSection" class="loading">
+                <div class="loading-spinner"></div>
+                <h3>🔮 L'IA Studio Evento analyse votre projet...</h3>
+                <p>⚡ Création de votre <span id="loadingModuleName">module</span> personnalisé...</p>
+                <p style="color: #666; margin-top: 15px;">Analyse en cours... Cela prend généralement 30-60 secondes</p>
+            </div>
+
+            <div id="resultSection" style="display: none;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h2>✅ Voici votre aperçu <span id="resultModuleName">module</span> !</h2>
+                    <p>Résultat personnalisé basé sur vos informations</p>
+                </div>
+
+                <div class="result-container">
+                    <div class="result-content" id="resultContent">
+                        <!-- Contenu généré dynamiquement -->
+                    </div>
+                    
+                    <!-- Email gate pour débloquer -->
+                    <div class="email-gate" id="emailGate">
+                        <h4 style="color: #7b1fa2; margin-bottom: 15px;">🔓 Débloquez votre résultat complet</h4>
+                        <p style="margin-bottom: 15px;">Recevez le rapport PDF + contacts prestataires + benchmark budgétaire</p>
+                        <form class="email-form" onsubmit="return submitEmail(event)">
+                            <input type="email" id="userEmail" class="email-input" placeholder="votre.email@entreprise.com" required>
+                            <button type="submit" class="email-submit">🚀 Débloquer</button>
+                        </form>
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">
+                            ✅ Pas de spam • ✅ Données effacées après envoi • ✅ Désinscription en 1 clic
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pricing complet -->
+                <div id="pricingSection" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h3>💎 Choisissez votre formule</h3>
+                        <p>Toutes les formules incluent la génération IA, exports PDF et support technique</p>
+                        <div style="margin: 20px 0;">
+                            <label style="display: inline-flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 10px 20px; border-radius: 25px;">
+                                <input type="checkbox" id="annualToggle" onchange="toggleAnnualPricing()" style="transform: scale(1.2);">
+                                <span style="font-weight: bold;">💰 Paiement annuel (-20%)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="pricingGrid" class="pricing-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+                        <!-- Les cartes de pricing seront générées dynamiquement -->
+                    </div>
+
+                    <div style="text-align: center; margin: 30px 0;">
+                        <p style="font-style: italic; color: #666;">
+                            💡 <strong>Essayez gratuitement, payez seulement si satisfait</strong>
+                        </p>
+                        <div style="background: rgba(76, 175, 80, 0.1); padding: 15px; border-radius: 10px; margin: 20px 0;">
+                            <p><strong>🎁 Garantie satisfait ou remboursé 30 jours</strong></p>
+                            <p style="font-size: 0.9rem; margin-top: 5px;">Résiliez à tout moment, sans frais cachés</p>
+                        </div>
+                    </div>
+
+                    <div class="payment-methods">
+                        <button class="payment-btn" style="background: #000;">🍎 Apple Pay</button>
+                        <button class="payment-btn" style="background: #4285f4;">G Pay</button>
+                        <button class="payment-btn" style="background: #635bff;">💳 Stripe</button>
+                        <button class="payment-btn" style="background: #ff5722;">☕ PayPal</button>
+                    </div>
+
+                    <!-- Service expert -->
+                    <div class="expert-service">
+                        <h4 style="color: #2e7d32; margin-bottom: 15px;">👨‍💼 Besoin d'aide supplémentaire ?</h4>
+                        <p style="margin-bottom: 15px;"><strong>Étude personnalisée par nos experts</strong></p>
+                        <p style="margin-bottom: 15px;">Analyse approfondie de votre projet + recommandations sur-mesure + call stratégique 30min</p>
+                        <button class="btn btn-primary" onclick="contactExpert()" style="margin-bottom: 10px;">
+                            📞 Contactez-nous - C'est gratuit !
+                        </button>
+                        <p style="font-size: 0.8rem; color: #666;">Réponse sous 24h • Sans engagement</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-secondary" onclick="showProjectInput()">← Modifier ma description</button>
+                    <button class="btn btn-secondary" onclick="showModuleSelection()">🔄 Changer de module</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 6: Dashboard utilisateur -->
+        <div class="page" id="dashboard">
+            <div style="margin-bottom: 30px;">
+                <h2>🎯 Votre Dashboard Studio Evento</h2>
+                <p>Gérez tous vos projets événementiels en un seul endroit</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-main">
+                    <div style="background: white; padding: 25px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3>📋 Votre événement : <span id="currentProjectName">Séminaire Commercial Lyon</span></h3>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span><strong>Progression globale</strong></span>
+                                <span id="progressPercentage">33%</span>
+                            </div>
+                            <div style="background: #e9ecef; border-radius: 10px; height: 10px; overflow: hidden;">
+                                <div style="background: linear-gradient(135deg, #4CAF50, #45a049); height: 100%; width: 33%; transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                        <p>💰 Budget utilisé : <span id="budgetUsed">27€</span> / Budget projet estimé : <span id="totalBudget">25 000€</span></p>
+                    </div>
+
+                    <div style="background: white; padding: 25px; border-radius: 15px;">
+                        <h4>🚀 Actions rapides</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="generateFinalDocument()">📄 Générer document final</button>
+                            <button class="btn btn-secondary" onclick="duplicateProject()">📋 Dupliquer projet</button>
+                            <button class="btn btn-secondary" onclick="shareProject()">👥 Partager avec équipe</button>
+                            <button class="btn btn-secondary" onclick="showAnalytics()">📊 Voir analytics</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-sidebar">
+                    <h4 style="margin-bottom: 20px;">📊 Statut des modules</h4>
+                    
+                    <div class="module-status" onclick="openModule('cahier-charges')">
+                        <div class="status-icon completed">✓</div>
+                        <div>
+                            <div style="font-weight: bold;">Cahier des charges</div>
+                            <div style="font-size: 0.8rem; color: #666;">Complété</div>
+                        </div>
+                    </div>
+
+                    <div class="module-status" onclick="openModule('lieu')">
+                        <div class="status-icon completed">✓</div>
+                        <div>
+                            <div style="font-weight: bold;">Lieu & Logistique</div>
+                            <div style="font-size: 0.8rem; color: #666;">Complété</div>
+                        </div>
+                    </div>
+
+                    <div class="module-status" onclick="openModule('budget')">
+                        <div class="status-icon completed">✓</div>
+                        <div>
+                            <div style="font-weight: bold;">Optimisation Budget</div>
+                            <div style="font-size: 0.8rem; color: #666;">Complété</div>
+                        </div>
+                    </div>
+
+                    <div class="module-status" onclick="openModule('animation')">
+                        <div class="status-icon current">⏳</div>
+                        <div>
+                            <div style="font-weight: bold;">Animation</div>
+                            <div style="font-size: 0.8rem; color: #ffc107;">En attente</div>
+                        </div>
+                    </div>
+
+                    <div class="module-status" onclick="showModuleRecommendations()">
+                        <div class="status-icon pending">+</div>
+                        <div>
+                            <div style="font-weight: bold;">5 autres modules</div>
+                            <div style="font-size: 0.8rem; color: #666;">Recommandés</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 20px; border: 2px solid #ffc107;">
+                        <h5>🎁 Recommandations</h5>
+                        <p style="font-size: 0.9rem; margin: 10px 0;">Pour votre séminaire Lyon, ajoutez :</p>
+                        <button class="btn btn-secondary" style="width: 100%; margin: 5px 0; font-size: 0.9rem;" onclick="addModule('risques')">
+                            ⚠️ Gérer les risques (+9€)
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%; margin: 5px 0; font-size: 0.9rem;" onclick="addModule('rse')">
+                            🌱 Impact RSE (+9€)
+                        </button>
+                        <hr style="margin: 15px 0;">
+                        <button class="btn btn-warning" style="width: 100%; font-size: 0.9rem;" onclick="upgradeToAll()">
+                            🚀 Pack 3 modules 25€/mois
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 7: Exemples de modules -->
+        <div class="page" id="examples">
+            <div style="margin-bottom: 30px;">
+                <h2>💡 Exemple de résultat : <span id="exampleModuleTitle">Module</span></h2>
+                <p>Découvrez la qualité de nos analyses IA</p>
+            </div>
+
+            <div style="background: white; padding: 30px; border-radius: 15px; border: 2px solid #4CAF50;">
+                <div id="exampleContent">
+                    <!-- Contenu d'exemple dynamique -->
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary" onclick="startWithThisModule()">🚀 Utiliser ce module</button>
+                <button class="btn btn-secondary" onclick="showModuleSelection()">← Voir tous les modules</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification toast -->
+    <div class="notification" id="notification">
+        <span id="notificationText">Message</span>
+    </div>
+
+    <!-- Social Proof Notification -->
+    <div class="social-proof-notification" id="socialProofNotification">
+        <button class="notification-close" onclick="closeSocialProof()">&times;</button>
+        <div class="notification-header">
+            <div class="notification-avatar" id="notificationAvatar">M</div>
+            <div class="notification-info">
+                <div class="notification-name" id="notificationName">Marie</div>
+                <div class="notification-location" id="notificationLocation">Lyon</div>
+            </div>
+        </div>
+        <div class="notification-action" id="notificationAction">
+            <span class="social-proof-indicator"></span>
+            vient de générer son cahier des charges
+        </div>
+        <div class="notification-time" id="notificationTime">Il y a 2 minutes</div>
+    </div>
+
+    <!-- Exit Intent Popup -->
+    <div class="exit-popup" id="exitPopup">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closeExitPopup()">&times;</button>
+            
+            <div class="popup-title">🚨 Attendez ! Avant de partir...</div>
+            
+            <div class="popup-offer">
+                <h4 style="color: #2e7d32; margin-bottom: 15px;">🎁 OFFRE EXCLUSIVE</h4>
+                <p style="margin-bottom: 10px;"><strong>Recevez GRATUITEMENT notre guide</strong></p>
+                <p style="color: #666;">"50 erreurs événementielles qui coûtent cher + checklist ultime"</p>
+            </div>
+            
+            <form class="popup-form" onsubmit="return submitExitEmail(event)">
+                <input type="email" id="exitEmail" class="popup-email" placeholder="votre.email@entreprise.com" required>
+                <button type="submit" class="popup-submit">📥 Télécharger</button>
+            </form>
+            
+            <div class="popup-bonus">
+                <p style="margin: 0; font-size: 0.9rem;"><strong>BONUS :</strong> Accès prioritaire à nos prochaines fonctionnalités + 30% de réduction sur votre premier achat</p>
+            </div>
+            
+            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+                ✅ Pas de spam • ✅ Désinscription en 1 clic • ✅ 4,247 téléchargements ce mois
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Données des modules avec valeur ajoutée
+        const modulesData = [
+            {
+                "id": "cahier_des_charges",
+                "titre": "Cahier des charges",
+                "icon": "🎯",
+                "challenge": "Je ne sais pas par où commencer",
+                "valeur_ajoutee": "Génération rapide d'un brief événementiel professionnel, exhaustif et structuré, même à partir d'une simple description ou d'un document existant.",
+                "avantages": [
+                    "Guidage même pour les néophytes",
+                    "Parfait pour l'externalisation ou la collaboration",
+                    "Prise en compte automatique des contraintes"
+                ],
+                "livrables": [
+                    "PDF structuré",
+                    "Version modifiable dans l'outil"
+                ]
+            },
+            {
+                "id": "recherche_lieux",
+                "titre": "Recherche de lieux",
+                "icon": "🏢",
+                "challenge": "Trouver le lieu parfait",
+                "valeur_ajoutee": "Sélection personnalisée de lieux pertinents selon critères, avec comparatif et liens cliquables.",
+                "avantages": [
+                    "Comparatif instantané",
+                    "Liens directs et benchmarking",
+                    "Bloc recommandations pour la suite"
+                ],
+                "livrables": [
+                    "Tableau synthétique (web, PDF, Excel)",
+                    "Liens cliquables",
+                    "PDF élégant avec call-to-action"
+                ]
+            },
+            {
+                "id": "recherche_animations",
+                "titre": "Recherche d'animations",
+                "icon": "🎭",
+                "challenge": "Animation originale et adaptée",
+                "valeur_ajoutee": "Propose des animations parfaitement adaptées à la cible et aux objectifs, avec scoring et recommandations IA.",
+                "avantages": [
+                    "Scoring objectif",
+                    "Recommandation finale IA",
+                    "Liens vers fiches ou démos prestataires"
+                ],
+                "livrables": [
+                    "Tableau trié, scoring, prix",
+                    "Bloc recommandation IA",
+                    "Export PDF et Excel"
+                ]
+            },
+            {
+                "id": "creation_concept",
+                "titre": "Création de concept",
+                "icon": "💡",
+                "challenge": "Concept unique et personnalisé",
+                "valeur_ajoutee": "Génère plusieurs concepts événementiels originaux et différenciants, avec storytelling intégré.",
+                "avantages": [
+                    "Différenciation immédiate",
+                    "Présentation synthétique prête à pitcher",
+                    "Lien direct vers la création graphique"
+                ],
+                "livrables": [
+                    "Fiche concept (PDF)",
+                    "Propositions synthétiques"
+                ]
+            },
+            {
+                "id": "charte_graphique",
+                "titre": "Création de charte graphique",
+                "icon": "🎨",
+                "challenge": "Créer une identité visuelle",
+                "valeur_ajoutee": "Génération d'une identité visuelle cohérente, adaptée au concept, prête à décliner sur tous les supports.",
+                "avantages": [
+                    "Rapidité et cohérence",
+                    "Déclinaisons prêtes à l'emploi (invitations, kakémonos, etc.)",
+                    "Visuels exportables"
+                ],
+                "livrables": [
+                    "PDF et images (moodboard, déclinaisons)",
+                    "Palette couleurs, typos"
+                ]
+            },
+            {
+                "id": "reduction_carbone",
+                "titre": "Réduction d'impact carbone",
+                "icon": "🌱",
+                "challenge": "Réduire impact environnemental",
+                "valeur_ajoutee": "Estimation précise de l'empreinte carbone, plan d'action IA, et positionnement par rapport au marché.",
+                "avantages": [
+                    "Benchmarks concrets",
+                    "Outils pros recommandés",
+                    "Synthèse pédagogique"
+                ],
+                "livrables": [
+                    "Tableau poste par poste",
+                    "Comparatif sectoriel",
+                    "Liens outils",
+                    "Synthèse exportable"
+                ]
+            },
+            {
+                "id": "mesure_roi",
+                "titre": "Mesure du ROI",
+                "icon": "📊",
+                "challenge": "Prouver le ROI",
+                "valeur_ajoutee": "Calcul automatique d'un score ROI personnalisé, visualisation graphique, outils recommandés.",
+                "avantages": [
+                    "Visualisation graphique (note, smiley, barre)",
+                    "Outils recommandés",
+                    "Rapport pédagogique"
+                ],
+                "livrables": [
+                    "Rapport ROI complet (PDF, Excel)",
+                    "Score graphique",
+                    "Bloc outils recommandés"
+                ]
+            },
+            {
+                "id": "gestion_risques",
+                "titre": "Gestion des risques",
+                "icon": "⚠️",
+                "challenge": "Anticiper les problèmes",
+                "valeur_ajoutee": "Plan de gestion des risques structuré, priorisé, et visualisé en heatmap.",
+                "avantages": [
+                    "Identification exhaustive",
+                    "Recommandations IA de mitigation",
+                    "Visualisation avancée (heatmap, tableau, Excel)"
+                ],
+                "livrables": [
+                    "Tableau priorisé (web, PDF, Excel)",
+                    "Heatmap couleur",
+                    "Fichier Excel"
+                ]
+            },
+            {
+                "id": "optimisation_budget",
+                "titre": "Optimisation du budget",
+                "icon": "💰",
+                "challenge": "Respecter votre budget",
+                "valeur_ajoutee": "Analyse, benchmarking, scénarios alternatifs, et simulateur interactif du budget événementiel.",
+                "avantages": [
+                    "Modification à la volée",
+                    "Visualisation graphique (camembert/bars)",
+                    "Export Excel, CSV, PDF"
+                ],
+                "livrables": [
+                    "Tableau dynamique",
+                    "Graphique camembert",
+                    "Rapport scénarios, benchmarks, exports"
+                ]
+            }
+        ];
+
+        // Nouveau modèle de pricing complet
+        const pricingPlans = {
+            moduleUnique: {
+                name: "Module unique",
+                price: 9,
+                unit: "par utilisation",
+                features: ["1 module au choix", "Résultat complet", "Export PDF", "Support email"],
+                popular: false
+            },
+            pack3: {
+                name: "Pack 3 modules",
+                price: 25,
+                unit: "par mois",
+                annualPrice: 20,
+                features: ["3 modules inclus", "Usage illimité", "Dashboard complet", "Support prioritaire"],
+                popular: false
+            },
+            pack6: {
+                name: "Pack 6 modules",
+                price: 45,
+                unit: "par mois",
+                annualPrice: 36,
+                features: ["6 modules inclus", "Usage illimité", "Analytics avancées", "Templates premium"],
+                popular: true
+            },
+            pack9: {
+                name: "Pack 9 modules",
+                price: 64,
+                unit: "par mois",
+                annualPrice: 51,
+                features: ["Tous les 9 modules", "Usage illimité", "White-labeling", "Support dédié"],
+                popular: false
+            },
+            equipe3: {
+                name: "Équipe 3 personnes",
+                price: 159,
+                unit: "par mois",
+                annualPrice: 127,
+                features: ["9 modules illimités", "3 utilisateurs", "Collaboration temps réel", "Gestion de projets"],
+                popular: false
+            },
+            equipe5: {
+                name: "Équipe 5 personnes",
+                price: 229,
+                unit: "par mois",
+                annualPrice: 183,
+                features: ["9 modules illimités", "5 utilisateurs", "Workflow avancé", "Analytics équipe"],
+                popular: false
+            },
+            equipe10: {
+                name: "Équipe 10 personnes",
+                price: 399,
+                unit: "par mois",
+                annualPrice: 319,
+                features: ["9 modules illimités", "10 utilisateurs", "API access", "Formation incluse"],
+                popular: false
+            },
+            equipe10plus: {
+                name: "Équipe +10 personnes",
+                price: 549,
+                unit: "par mois",
+                annualPrice: 439,
+                features: ["9 modules illimités", "Utilisateurs illimités", "Support 24/7", "CSM dédié"],
+                popular: false
+            }
+        };
+
+        // État de l'application
+        let appState = {
+            currentPage: 'home',
+            selectedModule: null,
+            userProject: {
+                description: '',
+                document: null,
+                results: {},
+                completedModules: ['cahier-charges', 'lieu', 'budget'],
+                currentModule: null
+            },
+            user: {
+                hasAccount: false,
+                isPremium: false,
+                trialUsed: false
+            }
+        };
+
+        // Générer les modules dynamiquement
+        function generateModulesGrid() {
+            const grid = document.getElementById('modulesGrid');
+            grid.innerHTML = '';
+            
+            modulesData.forEach(module => {
+                const moduleCard = document.createElement('div');
+                moduleCard.className = 'module-card';
+                moduleCard.onclick = () => selectModule(module.id, module.icon, module.challenge, module.titre);
+                
+                moduleCard.innerHTML = `
+                    <div class="module-header">
+                        <div class="module-icon">${module.icon}</div>
+                        <div>
+                            <h3 class="module-title">${module.challenge}</h3>
+                            <p class="module-subtitle">MODULE : ${module.titre}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="module-value">
+                        <h5>💎 Valeur ajoutée</h5>
+                        <p>${module.valeur_ajoutee}</p>
+                    </div>
+                    
+                    <div class="module-advantages">
+                        <h6>✨ Avantages clés :</h6>
+                        ${module.avantages.map(avantage => `
+                            <div class="advantage-item">
+                                <span class="check">✓</span>
+                                <span>${avantage}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="module-advantages">
+                        <h6>📋 Livrables :</h6>
+                        ${module.livrables.map(livrable => `
+                            <div class="advantage-item">
+                                <span class="check">📄</span>
+                                <span>${livrable}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="module-actions">
+                        <button class="btn-example" onclick="event.stopPropagation(); showExample('${module.id}')">
+                            👁️ Voir exemple
+                        </button>
+                        <button class="btn-select">
+                            🚀 Sélectionner
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(moduleCard);
+            });
+        }
+
+        // Générer le pricing dynamiquement
+        function generatePricingGrid(isAnnual = false) {
+            const grid = document.getElementById('pricingGrid');
+            grid.innerHTML = '';
+            
+            // Essai gratuit toujours en premier
+            const freeCard = document.createElement('div');
+            freeCard.className = 'pricing-card';
+            freeCard.style.borderColor = '#28a745';
+            freeCard.style.background = 'linear-gradient(135deg, #d4edda, #c3e6cb)';
+            freeCard.innerHTML = `
+                <h4 style="color: #28a745; margin-bottom: 15px;">🎁 ESSAI GRATUIT</h4>
+                <div class="price-container">
+                    <div class="price" style="font-size: 1.8rem;">Ce que vous voyez</div>
+                    <div class="price-unit">Aperçu complet</div>
+                </div>
+                <ul class="feature-list" style="font-size: 0.9rem; margin: 20px 0;">
+                    <li>✅ Aperçu du résultat</li>
+                    <li>✅ Structure complète</li>
+                    <li>✅ Démonstration IA</li>
+                    <li style="color: #dc3545;">❌ Export PDF</li>
+                    <li style="color: #dc3545;">❌ Contacts masqués</li>
+                </ul>
+                <p style="font-size: 0.8rem; color: #666; margin: 15px 0;">
+                    Parfait pour tester sans engagement
+                </p>
+            `;
+            grid.appendChild(freeCard);
+            
+            // Cartes de pricing principales
+            Object.entries(pricingPlans).forEach(([key, plan]) => {
+                const card = document.createElement('div');
+                card.className = 'pricing-card';
+                
+                if (plan.popular) {
+                    card.classList.add('popular');
+                }
+                
+                if (key.includes('equipe')) {
+                    card.classList.add('team');
+                }
+                
+                const currentPrice = isAnnual && plan.annualPrice ? plan.annualPrice : plan.price;
+                const originalPrice = plan.price;
+                
+                card.innerHTML = `
+                    <h4 style="margin-bottom: 15px;">${plan.name}</h4>
+                    <div class="price-container">
+                        <div class="price ${isAnnual && plan.annualPrice ? 'price-annual' : ''}">${currentPrice}€</div>
+                        <div class="price-unit">${plan.unit}</div>
+                        ${isAnnual && plan.annualPrice ? `
+                            <div class="price-save">Économie ${originalPrice - currentPrice}€/mois</div>
+                        ` : ''}
+                    </div>
+                    <ul class="feature-list" style="font-size: 0.9rem; margin: 20px 0;">
+                        ${plan.features.map(feature => `<li>✅ ${feature}</li>`).join('')}
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="selectPlan('${key}', ${currentPrice})">
+                        ${key === 'moduleUnique' ? '💎 Acheter maintenant' : '🚀 Commencer'}
+                    </button>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Toggle pricing annuel
+        function toggleAnnualPricing() {
+            const isAnnual = document.getElementById('annualToggle').checked;
+            generatePricingGrid(isAnnual);
+        }
+
+        // Sélectionner un plan
+        function selectPlan(planKey, price) {
+            const plan = pricingPlans[planKey];
+            showNotification(`Plan sélectionné : ${plan.name} - ${price}€`);
+            
+            if (planKey === 'moduleUnique') {
+                purchaseModule();
+            } else {
+                subscribeAll();
+            }
+        }
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            appState.currentPage = pageId;
+            
+            // Mise à jour de la progress bar
+            updateProgressTracker(pageId);
+            
+            // Affichage conditionnel du bouton dashboard
+            if (appState.user.hasAccount || appState.userProject.completedModules.length > 0) {
+                document.getElementById('dashboardBtn').style.display = 'block';
+            }
+        }
+
+        // Mise à jour du tracker de progression
+        function updateProgressTracker(pageId) {
+            const steps = {
+                'home': 1,
+                'onboarding': 1,
+                'moduleSelection': 2,
+                'projectInput': 3,
+                'result': 4,
+                'dashboard': 5
+            };
+            
+            const currentStep = steps[pageId] || 1;
+            
+            for (let i = 2; i <= 5; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                stepElement.className = 'progress-icon';
+                
+                if (i < currentStep) {
+                    stepElement.classList.add('completed');
+                    stepElement.textContent = '✓';
+                } else if (i === currentStep) {
+                    stepElement.classList.add('current');
+                    stepElement.textContent = i.toString();
+                } else {
+                    stepElement.classList.add('pending');
+                    stepElement.textContent = i.toString();
+                }
+            }
+        }
+
+        // Démarrer l'essai gratuit
+        function startFreeTrial() {
+            showNotification("🎁 Parfait ! Choisissez votre module d'essai gratuit");
+            showModuleSelection();
+        }
+
+        // Afficher l'onboarding
+        function showOnboarding() {
+            showPage('onboarding');
+        }
+
+        // Afficher la sélection de modules
+        function showModuleSelection() {
+            showPage('moduleSelection');
+        }
+
+        // Sélectionner un module
+        function selectModule(moduleId, icon, challenge, description) {
+            appState.selectedModule = {
+                id: moduleId,
+                icon: icon,
+                challenge: challenge,
+                description: description
+            };
+            
+            // Mise à jour de l'interface
+            document.getElementById('selectedModuleTitle').innerHTML = `${icon} ${description}`;
+            document.getElementById('loadingModuleName').textContent = description;
+            document.getElementById('resultModuleName').textContent = description;
+            
+            // Marquer comme sélectionné visuellement
+            document.querySelectorAll('.module-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            showNotification(`Module sélectionné : ${description}`);
+            
+            // Vérifier si l'utilisateur est connecté
+            if (typeof isUserAuthenticated !== 'undefined' && !isUserAuthenticated()) {
+                // Afficher le modal d'authentification
+                showAuthModal(() => {
+                    // Callback après connexion réussie
+                    setTimeout(() => {
+                        showProjectInput();
+                    }, 1000);
+                });
+            } else {
+                // Transition vers saisie du projet
+                setTimeout(() => {
+                    showProjectInput();
+                }, 1000);
+            }
+        }
+
+        // Afficher la page de saisie du projet
+        function showProjectInput() {
+            showPage('projectInput');
+            document.getElementById('projectDescription').focus();
+        }
+
+        // Utiliser le template
+        function useTemplate() {
+            const template = `Type d'événement : Séminaire commercial
+Nombre de participants : 80 personnes
+Lieu souhaité : Lyon
+Budget approximatif : 25 000€
+Objectifs spécifiques : Formation équipe commerciale + team building sur 2 jours`;
+            
+            document.getElementById('projectDescription').value = template;
+            showNotification("Template chargé ! Vous pouvez le modifier selon vos besoins");
+        }
+
+        // Focus sur le textarea
+        function focusTextarea() {
+            document.getElementById('projectDescription').focus();
+        }
+
+        // Gestion de l'upload de fichier
+        function handleFileUpload() {
+            const fileInput = document.getElementById('fileUpload');
+            const file = fileInput.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = `📎 ${file.name}`;
+                appState.userProject.document = file;
+                showNotification("Document ajouté ! Cela enrichira l'analyse IA");
+            }
+        }
+
+        // Générer le résultat
+        function generateResult() {
+            const description = document.getElementById('projectDescription').value;
+            if (!description.trim()) {
+                showNotification("⚠️ Veuillez décrire votre événement pour continuer", "warning");
+                return;
+            }
+            
+            appState.userProject.description = description;
+            showPage('result');
+            
+            // Simulation de génération IA
+            setTimeout(() => {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('resultSection').style.display = 'block';
+                
+                // Générer le contenu en fonction du module
+                generateModuleContent();
+                
+                // Afficher l'email gate par défaut
+                document.getElementById('emailGate').style.display = 'block';
+                document.getElementById('pricingSection').style.display = 'none';
+                
+            }, 3000); // 3 secondes de "génération"
+        }
+
+        // Générer le contenu spécifique au module
+        function generateModuleContent() {
+            const moduleId = appState.selectedModule.id;
+            const resultContainer = document.getElementById('resultContent');
+            
+            const examples = {
+                'cahier_des_charges': `
+                    <h4>📋 Cahier des charges - Séminaire commercial Lyon</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Benchmark automatique :</strong> Votre budget estimé vs 500 événements similaires : <span style="color: #4CAF50; font-weight: bold;">15% sous la moyenne</span></p>
+                    </div>
+                    <p><strong>🎯 Objectifs :</strong> Formation équipe commerciale + team building</p>
+                    <p><strong>👥 Participants :</strong> 80 personnes (commercial + management)</p>
+                    <p><strong>📍 Lieu recommandé :</strong> Centre de congrès Lyon Part-Dieu <em>(Sélectionné parmi 14,000 lieux référencés)</em></p>
+                    <p><strong>⏰ Durée optimale :</strong> 2 jours avec soirée networking</p>
+                    <p><strong>💰 Budget estimé :</strong> 22 000€ - 28 000€</p>
+                    <p><strong>📋 Planning détaillé :</strong></p>
+                    <p>- Jour 1 : Accueil + formations (9h-18h)</p>
+                    <p>- Soirée : Networking restaurant privatisé</p>
+                    <p>- Jour 2 : Ateliers pratiques + conclusion</p>
+                    <p><strong>🎯 Livrables :</strong> Supports formation, guide participant...</p>
+                `,
+                'recherche_lieux': `
+                    <h4>🏢 Lieux recommandés - Lyon</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Analyse de 127 lieux</strong> dans votre zone avec <strong>tarifs temps réel</strong></p>
+                    </div>
+                    <p><strong>1. Centre de Congrès Lyon</strong> - Capacité 100 pers - 1 200€/jour <em>(Disponible)</em></p>
+                    <p>📍 Part-Dieu • 🅿️ Parking • 🚊 Métro • ☕ Restauration</p>
+                    <p><strong>2. Hôtel Villa Florentine</strong> - Capacité 80 pers - 1 800€/jour <em>(2 créneaux libres)</em></p>
+                    <p>📍 Vieux Lyon • 🏨 Hébergement • 🍽️ Restaurant gastronomique</p>
+                    <p><strong>3. Espace Tête d'Or</strong> - Capacité 120 pers - 900€/jour <em>(Très disponible)</em></p>
+                    <p>📍 Parc Tête d'Or • 🌳 Cadre nature • 💰 Économique</p>
+                    <div style="background: #fff3cd; padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <p><strong>💡 Recommandation IA :</strong> Centre de Congrès pour votre profil (score 94/100)</p>
+                    </div>
+                `,
+                'recherche_animations': `
+                    <h4>🎭 Animations recommandées</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Sélection parmi 340 prestataires</strong> vérifiés avec scoring IA</p>
+                    </div>
+                    <p><strong>🏆 Team building culinaire</strong> - 2h - 45€/pers <em>(Score: 96/100)</em></p>
+                    <p>👨‍🍳 Chef professionnel • 👥 Équipes de 8 • 🍽️ Dégustation incluse</p>
+                    <p><strong>🎯 Escape game d'entreprise</strong> - 1h30 - 35€/pers <em>(Score: 89/100)</em></p>
+                    <p>🧩 Défi collaboration • 📱 Application dédiée • 🏆 Classement équipes</p>
+                    <p><strong>🎤 Conférencier motivation</strong> - 1h - 2 500€ <em>(Score: 92/100)</em></p>
+                    <p>🌟 Expert reconnu • 💼 Thème commercial • 📈 ROI démontré</p>
+                    <div style="background: #fff3cd; padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <p><strong>💡 Package recommandé :</strong> Culinaire + Conférencier = 6 100€</p>
+                    </div>
+                `,
+                'reduction_carbone': `
+                    <h4>🌱 Plan RSE - Événement éco-responsable</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Benchmark :</strong> 40% moins d'impact que la moyenne sectorielle</p>
+                    </div>
+                    <p><strong>📊 Empreinte carbone estimée :</strong> 2,3 tonnes CO2</p>
+                    <p><strong>🚅 Transport :</strong> Privilégier train vs avion (-60% CO2)</p>
+                    <p><strong>🍽️ Restauration :</strong> Menu local, bio, moins de viande (-40% impact)</p>
+                    <p><strong>♻️ Déchets :</strong> Zéro plastique, tri sélectif, compost</p>
+                    <p><strong>🏨 Hébergement :</strong> Hôtels certifiés Green Key</p>
+                    <p><strong>📄 Supports :</strong> 100% numérique, QR codes</p>
+                    <p><strong>🎯 Objectif :</strong> -70% d'impact vs événement traditionnel</p>
+                `,
+                'mesure_roi': `
+                    <h4>📊 Mesure du ROI - Indicateurs clés</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Benchmark :</strong> ROI supérieur de 89% vs événements similaires</p>
+                    </div>
+                    <p><strong>💰 Investissement total :</strong> 25 000€</p>
+                    <p><strong>📈 ROI attendu :</strong> 340% sur 12 mois</p>
+                    <p><strong>🎯 Métriques de performance :</strong></p>
+                    <p>- Satisfaction participants : >8/10 (enquête post-événement)</p>
+                    <p>- Augmentation CA commercial : +15% (6 mois post-formation)</p>
+                    <p>- Cohésion équipe : +25% (baromètre interne)</p>
+                    <p>- Réduction turnover : -30% (12 mois)</p>
+                    <p><strong>💡 Valeur générée estimée :</strong> 85 000€ sur 1 an</p>
+                `,
+                'gestion_risques': `
+                    <h4>⚠️ Gestion des risques - Plan de contingence</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Analyse :</strong> 23 risques identifiés vs 12 en moyenne</p>
+                    </div>
+                    <p><strong>🌧️ Météo :</strong> Solution indoor de secours réservée</p>
+                    <p><strong>🚛 Transport :</strong> Prestataire backup + contacts urgence</p>
+                    <p><strong>🏥 Sanitaire :</strong> Protocole Covid, trousse premiers secours</p>
+                    <p><strong>⚡ Technique :</strong> Équipements redondants, technicien sur site</p>
+                    <p><strong>🍽️ Restauration :</strong> Menu alternatif allergies, quantités +10%</p>
+                    <p><strong>📞 Contacts urgence :</strong> Liste diffusée à toute l'équipe</p>
+                    <p><strong>💰 Assurance :</strong> Couverture 50k€ annulation/report</p>
+                `,
+                'optimisation_budget': `
+                    <h4>💰 Optimisation budget - 25 000€</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Benchmark vs 500 événements :</strong> Économie de 2 800€ identifiée</p>
+                    </div>
+                    <p><strong>🏢 Lieu :</strong> 1 200€ × 2 jours = 2 400€ (10%)</p>
+                    <p><strong>🍽️ Restauration :</strong> 85€ × 80 pers = 6 800€ (27%)</p>
+                    <p><strong>🎭 Animation :</strong> Team building + conférencier = 6 100€ (24%)</p>
+                    <p><strong>🏨 Hébergement :</strong> 120€ × 40 chambres = 4 800€ (19%)</p>
+                    <p><strong>🚗 Transport :</strong> Bus privatisé = 1 500€ (6%)</p>
+                    <p><strong>📋 Supports :</strong> Badges, documents = 800€ (3%)</p>
+                    <p><strong>💡 Économies possibles :</strong> -2 800€ avec nos recommandations</p>
+                `,
+                'creation_concept': `
+                    <h4>💡 Concepts créatifs personnalisés</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Générés via analyse :</strong> Profil équipe + objectifs + secteur</p>
+                    </div>
+                    <p><strong>🎯 Concept 1 : "Mission Objectif 2025"</strong></p>
+                    <p>🚀 Thème spatial • 🎮 Challenges gamifiés • 🏆 Récompenses mission</p>
+                    <p><strong>🎪 Concept 2 : "Sales Academy"</strong></p>
+                    <p>🎓 Formation premium • 📜 Diplômes personnalisés • 👥 Promotion équipe</p>
+                    <p><strong>🌟 Concept 3 : "Performance Summit"</strong></p>
+                    <p>⛰️ Défi montagne • 💪 Dépassement de soi • 🤝 Esprit équipe</p>
+                    <div style="background: #fff3cd; padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <p><strong>💡 Recommandé :</strong> "Mission Objectif 2025" pour votre équipe (score 97/100)</p>
+                    </div>
+                `,
+                'charte_graphique': `
+                    <h4>🎨 Charte graphique événementielle</h4>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                        <p><strong>📊 Adaptée à votre secteur :</strong> Codes visuels tech/commercial optimisés</p>
+                    </div>
+                    <p><strong>🎨 Palette couleurs :</strong> Bleu corporate #2196F3 + Orange énergie #FF9800</p>
+                    <p><strong>✍️ Typographie :</strong> Montserrat (moderne) + Source Sans Pro</p>
+                    <p><strong>📐 Logo événement :</strong> "Mission Objectif 2025" avec fusée stylisée</p>
+                    <p><strong>📋 Supports inclus :</strong></p>
+                    <p>- Badges participants et intervenants</p>
+                    <p>- Signalétique salles et espaces</p>
+                    <p>- Templates présentation PowerPoint</p>
+                    <p>- Kakémonos et roll-up (format print)</p>
+                    <p><strong>💾 Livrables :</strong> Pack complet vectoriel + guidelines</p>
+                `
+            };
+            
+            resultContainer.innerHTML = examples[moduleId] || examples['cahier_des_charges'];
+        }
+
+        // Variables pour exit intent
+        let exitIntentShown = false;
+        let mouseLeftViewport = false;
+        let socialProofInterval;
+        let socialProofActive = true;
+
+        // Base de données pour social proof
+        const socialProofData = [
+            {
+                name: "Sarah",
+                location: "Paris",
+                action: "vient de générer son cahier des charges",
+                time: "Il y a 2 minutes"
+            },
+            {
+                name: "Marc",
+                location: "Lyon",
+                action: "a économisé 2 800€ sur son budget événement",
+                time: "Il y a 5 minutes"
+            },
+            {
+                name: "Julie",
+                location: "Marseille", 
+                action: "a trouvé le lieu parfait en 12 minutes",
+                time: "Il y a 3 minutes"
+            },
+            {
+                name: "Thomas",
+                location: "Lille",
+                action: "vient de s'abonner au pack 6 modules",
+                time: "Il y a 8 minutes"
+            },
+            {
+                name: "Emma",
+                location: "Toulouse",
+                action: "a généré son plan RSE en 90 secondes",
+                time: "Il y a 6 minutes"
+            },
+            {
+                name: "Lucas",
+                location: "Nantes",
+                action: "vient de télécharger son rapport PDF",
+                time: "Il y a 4 minutes"
+            },
+            {
+                name: "Léa",
+                location: "Strasbourg",
+                action: "a optimisé son budget de 15k€ à 12,2k€",
+                time: "Il y a 7 minutes"
+            },
+            {
+                name: "Pierre",
+                location: "Bordeaux",
+                action: "vient de trouver 8 animations adaptées",
+                time: "Il y a 3 minutes"
+            },
+            {
+                name: "Clara",
+                location: "Nice",
+                action: "a calculé son ROI à 340% en 2 clics",
+                time: "Il y a 9 minutes"
+            },
+            {
+                name: "Antoine",
+                location: "Rennes",
+                action: "vient de créer sa charte graphique",
+                time: "Il y a 5 minutes"
+            },
+            {
+                name: "Camille",
+                location: "Montpellier",
+                action: "a identifié 23 risques pour son événement",
+                time: "Il y a 6 minutes"
+            },
+            {
+                name: "Maxime",
+                location: "Reims",
+                action: "vient de s'inscrire à l'essai gratuit",
+                time: "Il y a 1 minute"
+            }
+        ];
+
+        // Fonction pour afficher une notification social proof
+        function showSocialProof() {
+            if (!socialProofActive) return;
+            
+            const notification = document.getElementById('socialProofNotification');
+            const randomData = socialProofData[Math.floor(Math.random() * socialProofData.length)];
+            
+            // Mettre à jour le contenu
+            document.getElementById('notificationAvatar').textContent = randomData.name.charAt(0);
+            document.getElementById('notificationName').textContent = randomData.name;
+            document.getElementById('notificationLocation').textContent = randomData.location;
+            document.getElementById('notificationAction').innerHTML = 
+                `<span class="social-proof-indicator"></span>${randomData.action}`;
+            document.getElementById('notificationTime').textContent = randomData.time;
+            
+            // Afficher la notification
+            notification.classList.add('show');
+            
+            // Cacher automatiquement après 6 secondes
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 6000);
+            
+            // Tracking
+            trackEvent('social_proof_shown', { 
+                name: randomData.name, 
+                action: randomData.action 
+            });
+        }
+
+        // Fonction pour fermer manuellement la notification
+        function closeSocialProof() {
+            document.getElementById('socialProofNotification').classList.remove('show');
+            trackEvent('social_proof_closed_manually');
+        }
+
+        // Fonction pour démarrer le cycle de notifications
+        function startSocialProofCycle() {
+            // Première notification après 8 secondes
+            setTimeout(() => {
+                showSocialProof();
+            }, 8000);
+            
+            // Puis toutes les 12-18 secondes
+            socialProofInterval = setInterval(() => {
+                const randomDelay = 12000 + Math.random() * 6000; // 12-18 secondes
+                setTimeout(() => {
+                    showSocialProof();
+                }, randomDelay);
+            }, 15000); // Base de 15 secondes + variation
+        }
+
+        // Fonction pour arrêter les notifications (par exemple si utilisateur converti)
+        function stopSocialProof() {
+            socialProofActive = false;
+            if (socialProofInterval) {
+                clearInterval(socialProofInterval);
+            }
+            document.getElementById('socialProofNotification').classList.remove('show');
+        }
+
+        // Calculateur ROI
+        function updateCalculator() {
+            const events = document.getElementById('eventsSlider').value;
+            const timePerEvent = document.getElementById('timeSlider').value;
+            
+            // Mise à jour des affichages
+            document.getElementById('eventsValue').textContent = `${events} événement${events > 1 ? 's' : ''}`;
+            document.getElementById('timeValue').textContent = `${timePerEvent} heures`;
+            
+            // Calculs
+            const totalTimeManual = events * timePerEvent;
+            const totalTimeStudio = events * 0.5; // 30 minutes par événement
+            const timeSaved = totalTimeManual - totalTimeStudio;
+            
+            // Coût du temps (100€/heure pour un event manager)
+            const costPerHour = 100;
+            const costSaved = timeSaved * costPerHour;
+            
+            // Économies budget (moyenne 5% d'économie par événement sur un budget moyen de 15k€)
+            const avgBudgetPerEvent = 15000;
+            const budgetSaved = events * avgBudgetPerEvent * 0.05;
+            
+            const totalSavings = costSaved + budgetSaved;
+            
+            // Mise à jour de l'affichage
+            document.getElementById('timeSaved').textContent = `${Math.round(timeSaved)}h`;
+            document.getElementById('costSaved').textContent = `${Math.round(costSaved).toLocaleString()}€`;
+            document.getElementById('budgetSaved').textContent = `${Math.round(budgetSaved).toLocaleString()}€`;
+            document.getElementById('savingsTotal').textContent = `${Math.round(totalSavings).toLocaleString()}€`;
+        }
+
+        // Exit Intent Detection
+        function initExitIntent() {
+            document.addEventListener('mouseleave', function(e) {
+                if (e.clientY <= 0 && !exitIntentShown) {
+                    mouseLeftViewport = true;
+                    setTimeout(() => {
+                        if (mouseLeftViewport && !exitIntentShown) {
+                            showExitPopup();
+                        }
+                    }, 1000);
+                }
+            });
+            
+            document.addEventListener('mouseenter', function() {
+                mouseLeftViewport = false;
+            });
+            
+            // Déclencher aussi après 45 secondes sur mobile
+            setTimeout(() => {
+                if (!exitIntentShown && window.innerWidth <= 768) {
+                    showExitPopup();
+                }
+            }, 45000);
+        }
+
+        function showExitPopup() {
+            if (exitIntentShown || appState.user.hasAccount) return;
+            
+            exitIntentShown = true;
+            document.getElementById('exitPopup').classList.add('show');
+            
+            // Tracking
+            trackEvent('exit_intent_shown');
+        }
+
+        function closeExitPopup() {
+            document.getElementById('exitPopup').classList.remove('show');
+            trackEvent('exit_popup_closed');
+        }
+
+        function submitExitEmail(event) {
+            event.preventDefault();
+            const email = document.getElementById('exitEmail').value;
+            
+            if (!validateEmail(email)) {
+                showNotification("⚠️ Veuillez saisir un email valide", "warning");
+                return false;
+            }
+            
+            // Stocker l'email
+            appState.user.email = email;
+            appState.user.exitEmailCaptured = true;
+            
+            // Fermer la popup
+            closeExitPopup();
+            
+            // Notification succès
+            showNotification("🎉 Guide envoyé ! Vérifiez votre email + 30% de réduction activée");
+            
+            // Simuler l'envoi du guide
+            setTimeout(() => {
+                // En production : déclencher l'envoi de l'email avec le guide
+                console.log("Guide sent to:", email);
+            }, 1000);
+            
+            // Tracking
+            trackEvent('exit_email_captured', { email: email });
+            
+            return false;
+        }
+
+        // Fonction pour soumettre l'email et débloquer le contenu
+        function submitEmail(event) {
+            event.preventDefault();
+            const email = document.getElementById('userEmail').value;
+            
+            if (!validateEmail(email)) {
+                showNotification("⚠️ Veuillez saisir un email valide", "warning");
+                return false;
+            }
+            
+            // Stocker l'email
+            appState.user.email = email;
+            appState.user.hasAccount = true;
+            
+            // Arrêter les notifications social proof (utilisateur converti)
+            stopSocialProof();
+            
+            // Cacher l'email gate
+            document.getElementById('emailGate').style.display = 'none';
+            
+            // Afficher le pricing
+            showPricing();
+            
+            showNotification("✅ Email enregistré ! Voici vos options pour le rapport complet");
+            
+            // Tracking
+            trackEvent('email_captured', { email: email });
+            
+            return false;
+        }
+        
+        // Fonction pour contacter les experts
+        function contactExpert() {
+            // Simuler l'ouverture d'un formulaire de contact
+            showNotification("📞 Redirection vers notre formulaire de contact...");
+            
+            // En production : ouvrir un calendly, formulaire, ou modal
+            setTimeout(() => {
+                const contactUrl = "mailto:experts@studioevent.com?subject=Demande d'étude gratuite&body=Bonjour, je souhaiterais une étude personnalisée pour mon projet événementiel.";
+                window.open(contactUrl, '_blank');
+            }, 1000);
+            
+            trackEvent('expert_contact_requested');
+        }
+
+        // Afficher les options de pricing
+        function showPricing() {
+            document.getElementById('pricingSection').style.display = 'block';
+            document.getElementById('pricingSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Acheter un module unique
+        function purchaseModule() {
+            showNotification("🎉 Module débloqué ! Accès complet disponible");
+            // Simuler l'achat
+            appState.userProject.completedModules.push(appState.selectedModule.id);
+            appState.user.hasAccount = true;
+            
+            // Rediriger vers dashboard après achat
+            setTimeout(() => {
+                showPage('dashboard');
+                document.getElementById('dashboardBtn').style.display = 'block';
+            }, 2000);
+        }
+
+        // S'abonner à tous les modules
+        function subscribeAll() {
+            showNotification("🚀 Abonnement activé ! Accès à tous les modules");
+            appState.user.isPremium = true;
+            appState.user.hasAccount = true;
+            
+            setTimeout(() => {
+                showPage('dashboard');
+                document.getElementById('dashboardBtn').style.display = 'block';
+            }, 2000);
+        }
+
+        // Afficher un exemple de module
+        function showExample(moduleId) {
+            const module = modulesData.find(m => m.id === moduleId);
+            if (!module) return;
+            
+            const examples = {
+                'cahier_des_charges': {
+                    title: "Cahier des charges",
+                    content: `
+                        <h4>📋 Exemple : Séminaire commercial (Réel client)</h4>
+                        <p><strong>Contexte :</strong> Entreprise tech, 60 commerciaux, objectif +20% CA</p>
+                        <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                            <h5 style="color: #2e7d32; margin-bottom: 15px;">💎 Valeur ajoutée</h5>
+                            <p style="margin-bottom: 15px;">${module.valeur_ajoutee}</p>
+                            <h6 style="color: #333; margin-bottom: 10px;">🎯 Résultat généré par l'IA :</h6>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <p>✅ Planning détaillé sur 3 jours</p>
+                                <p>✅ 15 ateliers pratiques personnalisés</p>
+                                <p>✅ Budget optimisé : 45k€ → 38k€ (-15%)</p>
+                                <p>✅ 5 lieux recommandés avec contacts directs</p>
+                                <p>✅ Plan de suivi post-événement</p>
+                            </div>
+                        </div>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <h6 style="color: #856404; margin-bottom: 10px;">📋 Livrables inclus</h6>
+                            ${module.livrables.map(livrable => `<p style="margin: 5px 0;">• ${livrable}</p>`).join('')}
+                        </div>
+                        <p style="margin-top: 15px;"><strong>💬 Témoignage :</strong> "Gain de 12h de préparation, événement réussi à 100%" - Sarah, DG</p>
+                    `
+                },
+                'recherche_lieux': {
+                    title: "Recherche de lieux",
+                    content: `
+                        <h4>🏢 Exemple : Recherche lieu conférence Paris</h4>
+                        <p><strong>Demande :</strong> 200 personnes, standing premium, proche gares</p>
+                        <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                            <h5 style="color: #2e7d32; margin-bottom: 15px;">💎 Valeur ajoutée</h5>
+                            <p style="margin-bottom: 15px;">${module.valeur_ajoutee}</p>
+                            <h6 style="color: #333; margin-bottom: 10px;">🎯 Résultat généré par l'IA :</h6>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <p>✅ 8 lieux présélectionnés selon critères</p>
+                                <p>✅ Comparatif détaillé prix/services/localisation</p>
+                                <p>✅ Contacts directs responsables commerciaux</p>
+                                <p>✅ Disponibilités temps réel</p>
+                                <p>✅ Photos HD et plans des espaces</p>
+                            </div>
+                        </div>
+                        <p><strong>💬 Témoignage :</strong> "Trouvé le lieu parfait en 1h au lieu de 3 jours" - Marc, Event Manager</p>
+                    `
+                },
+                'recherche_animations': {
+                    title: "Recherche d'animations",
+                    content: `
+                        <h4>🎭 Exemple : Team building créatif</h4>
+                        <p><strong>Demande :</strong> 40 personnes, cohésion équipe, budget 3k€</p>
+                        <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                            <h5 style="color: #2e7d32; margin-bottom: 15px;">💎 Valeur ajoutée</h5>
+                            <p style="margin-bottom: 15px;">${module.valeur_ajoutee}</p>
+                            <h6 style="color: #333; margin-bottom: 10px;">🎯 Résultat généré par l'IA :</h6>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <p>✅ 12 animations adaptées au profil équipe</p>
+                                <p>✅ Mix indoor/outdoor selon météo</p>
+                                <p>✅ Prestataires vérifiés avec avis clients</p>
+                                <p>✅ Devis instantanés et réservation directe</p>
+                                <p>✅ Planning intégré à l'événement</p>
+                            </div>
+                        </div>
+                        <p><strong>💬 Témoignage :</strong> "Animations parfaites, équipe réconciliée !" - Julie, RH</p>
+                    `
+                }
+            };
+
+            // Utiliser l'exemple correspondant ou le premier par défaut
+            const example = examples[moduleId] || examples['cahier_des_charges'];
+            document.getElementById('exampleModuleTitle').textContent = module.titre;
+            document.getElementById('exampleContent').innerHTML = example.content;
+            
+            // Stocker le module pour action "utiliser ce module"
+            appState.exampleModule = moduleId;
+            
+            showPage('examples');
+        }
+
+        // Utiliser le module depuis l'exemple
+        function startWithThisModule() {
+            const module = modulesData.find(m => m.id === appState.exampleModule);
+            if (module) {
+                appState.selectedModule = {
+                    id: module.id,
+                    icon: module.icon,
+                    challenge: module.challenge,
+                    titre: module.titre,
+                    data: module
+                };
+                document.getElementById('selectedModuleTitle').innerHTML = `${module.icon} ${module.titre}`;
+                showNotification(`Module ${module.titre} sélectionné !`);
+                showProjectInput();
+            }
+        }
+
+        // Fonctions Dashboard
+        function generateFinalDocument() {
+            showNotification("📄 Document final en cours de génération...");
+            setTimeout(() => {
+                showNotification("✅ Document PDF prêt ! Téléchargement automatique");
+                // Simuler téléchargement
+                const link = document.createElement('a');
+                link.href = 'data:text/plain;charset=utf-8,Votre événement Studio Evento - Document final';
+                link.download = 'seminaire-commercial-lyon-final.pdf';
+                link.click();
+            }, 2000);
+        }
+
+        function duplicateProject() {
+            showNotification("📋 Projet dupliqué ! Nouveau projet créé");
+            // Logique de duplication
+        }
+
+        function shareProject() {
+            showNotification("👥 Lien de partage copié dans le presse-papiers");
+            // Logique de partage
+        }
+
+        function showAnalytics() {
+            showNotification("📊 Analytics disponibles dans la version premium");
+            // Redirection vers analytics
+        }
+
+        function openModule(moduleId) {
+            showNotification(`Ouverture du module : ${moduleId}`);
+            // Logique d'ouverture de module
+        }
+
+        function showModuleRecommendations() {
+            showNotification("💡 Modules recommandés basés sur votre projet");
+            // Afficher recommandations détaillées
+        }
+
+        function addModule(moduleId) {
+            showNotification(`Module ${moduleId} ajouté pour 9€`);
+            // Logique d'ajout de module
+        }
+
+        function upgradeToAll() {
+            showNotification("🚀 Upgrade vers pack 3 modules !");
+            appState.user.isPremium = true;
+            // Logique d'upgrade
+        }
+
+        // Système de notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.style.background = type === 'success' ? '#28a745' : '#ffc107';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Sauvegarde automatique (localStorage)
+        function saveAppState() {
+            localStorage.setItem('studioEventoState', JSON.stringify(appState));
+        }
+
+        function loadAppState() {
+            const saved = localStorage.getItem('studioEventoState');
+            if (saved) {
+                appState = { ...appState, ...JSON.parse(saved) };
+                
+                // Restaurer l'état de l'interface
+                if (appState.user.hasAccount) {
+                    document.getElementById('dashboardBtn').style.display = 'block';
+                }
+            }
+        }
+
+        // Gestion des raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            // Escape pour retourner à l'accueil
+            if (e.key === 'Escape') {
+                showPage('home');
+            }
+            
+            // Ctrl+Enter pour valider le formulaire
+            if (e.ctrlKey && e.key === 'Enter') {
+                if (appState.currentPage === 'projectInput') {
+                    generateResult();
+                }
+            }
+        });
+
+        // Gestion responsive du progress tracker
+        function handleResize() {
+            const progressTracker = document.getElementById('progressTracker');
+            if (window.innerWidth <= 1200) {
+                progressTracker.style.display = 'none';
+            } else {
+                progressTracker.style.display = 'block';
+            }
+        }
+
+        // Analytics et tracking (version simplifiée)
+        function trackEvent(eventName, eventData = {}) {
+            console.log(`🔍 Analytics: ${eventName}`, eventData);
+            // Ici vous pourrez intégrer Google Analytics, Mixpanel, etc.
+        }
+
+        // Gestion des erreurs
+        window.addEventListener('error', function(e) {
+            console.error('Erreur application:', e);
+            showNotification("⚠️ Une erreur est survenue. Veuillez réessayer.", "warning");
+        });
+
+        // Initialisation de l'application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAppState();
+            handleResize();
+            
+            // Générer les modules et pricing
+            generateModulesGrid();
+            generatePricingGrid();
+            
+            // Initialiser le calculateur ROI
+            updateCalculator();
+            
+            // Initialiser l'exit intent
+            initExitIntent();
+            
+            // Tracking page vue initiale
+            trackEvent('app_loaded', { page: 'home' });
+            
+            // Auto-save périodique
+            setInterval(saveAppState, 30000); // Sauvegarde toutes les 30s
+            
+            // Gestion du redimensionnement
+            window.addEventListener('resize', handleResize);
+            
+            // Animation d'entrée
+            setTimeout(() => {
+                document.querySelector('.page.active').classList.add('fade-in');
+            }, 100);
+            
+            console.log('🎬 Studio Evento MVP initialisé avec Calculator ROI + Exit Intent');
+            console.log('📊 État application:', appState);
+        });
+
+        // Fonctions utilitaires
+        function formatPrice(price) {
+            return new Intl.NumberFormat('fr-FR', {
+                style: 'currency',
+                currency: 'EUR'
+            }).format(price);
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // API Mock (à remplacer par vraies API)
+        const API = {
+            async generateContent(moduleId, description, document = null) {
+                // Simulation d'appel API
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            success: true,
+                            content: `Contenu généré pour ${moduleId}`,
+                            metadata: { processingTime: '2.3s', confidence: 0.95 }
+                        });
+                    }, 2000);
+                });
+            },
+            
+            async processPayment(amount, method) {
+                // Simulation de paiement
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            success: true,
+                            transactionId: 'TXN_' + Date.now(),
+                            amount: amount
+                        });
+                    }, 1500);
+                });
+            },
+            
+            async saveProject(projectData) {
+                // Simulation de sauvegarde
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            success: true,
+                            projectId: 'PRJ_' + Date.now()
+                        });
+                    }, 500);
+                });
+            }
+        };
+
+        // Fonctions d'authentification
+        window.signOut = function() {
+            if (window.firebase && window.firebase.auth()) {
+                window.firebase.auth().signOut().then(() => {
+                    console.log('Utilisateur déconnecté');
+                }).catch((error) => {
+                    console.error('Erreur lors de la déconnexion:', error);
+                });
+            }
+        };
+
+        window.toggleUserMenu = function() {
+            const menu = document.getElementById('userMenu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            }
+        };
+
+        window.showPage = function(pageName) {
+            if (pageName === 'dashboard') {
+                console.log('Redirection vers le dashboard utilisateur');
+            } else if (pageName === 'home') {
+                window.location.href = 'studio-evento.html';
+            }
+        };
+
+        window.startFreeTrial = function() {
+            if (isUserAuthenticated()) {
+                console.log('Utilisateur déjà authentifié');
+            } else {
+                showAuthModal();
+            }
+        };
+
+        // Export pour tests (optionnel)
+        if (typeof module !== 'undefined' && module.exports) {
+            module.exports = { appState, showPage, selectModule, generateResult };
+        }
+    </script>
+    
+    <!-- Firebase Auth Integration -->
+    <script src="firebase-auth.js"></script>
+    
+    <!-- Module Chat Integration -->
+    <script src="module-chat.js"></script>
+</body>
+</html>

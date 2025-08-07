@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Event - Étape 3</title>
+    
+    <!-- Montserrat Font - Import complet -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind personnalisée -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'display': ['Montserrat', 'sans-serif'],
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'google-blue': '#1a73e8',
+                        'google-blue-hover': '#1b66c9',
+                        'google-green': '#34a853',
+                        'google-red': '#ea4335',
+                        'google-yellow': '#fbbc04',
+                    },
+                    fontSize: {
+                        'xs': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.05em' }],
+                        'sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0.025em' }],
+                        'base': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0' }],
+                        'lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '-0.025em' }],
+                        'xl': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.025em' }],
+                        '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.05em' }],
+                        '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.05em' }],
+                        '4xl': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '-0.05em' }],
+                        '5xl': ['3rem', { lineHeight: '1', letterSpacing: '-0.05em' }],
+                        '6xl': ['3.75rem', { lineHeight: '1', letterSpacing: '-0.05em' }],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- CSS personnalisé Google I/O avec dégradés et Montserrat optimisé -->
+    <style>
+        /* Reset et base Montserrat */
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+        
+        /* Composants CTA avec police Montserrat optimisée */
+        .cta-primary {
+            display: block;
+            min-width: 120px;
+            max-width: fit-content;
+            border-radius: 100px;
+            padding: 16px 24px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-primary:hover {
+            background-color: #1b66c9;
+            box-shadow: 0 2px 8px 0 rgba(26, 115, 232, 0.3), 0 1px 3px 1px rgba(26, 115, 232, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        .cta-outlined {
+            display: block;
+            min-width: 120px;
+            max-width: fit-content;
+            border-radius: 100px;
+            padding: 16px 24px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            background-color: transparent;
+            color: #4285f4;
+            border: 2px solid #4285f4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-outlined:hover {
+            background-color: #f0f7ff;
+            transform: translateY(-1px);
+        }
+        
+        /* Cartes avec bordures dégradées */
+        .gradient-card {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 3px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .gradient-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .gradient-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 3px;
+            background: var(--gradient);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+        }
+        
+        .gradient-card-content {
+            position: relative;
+            background: white;
+            border-radius: 17px;
+            padding: 32px;
+            height: 100%;
+        }
+        
+        /* Dégradé pour la carte principale */
+        .gradient-project {
+            --gradient: linear-gradient(135deg, #1a73e8 0%, #9c27b0 100%);
+        }
+        
+        /* Dégradé pour la carte template */
+        .gradient-template {
+            --gradient: linear-gradient(135deg, #34a853 0%, #e91e63 100%);
+        }
+        
+        /* Dégradés spécifiques pour les 4 blocs de modules */
+        .gradient-operational {
+            --gradient: linear-gradient(135deg, #ff6d00 0%, #9c27b0 100%);
+        }
+        
+        .gradient-concept {
+            --gradient: linear-gradient(135deg, #34a853 0%, #e91e63 100%);
+        }
+        
+        .gradient-budget {
+            --gradient: linear-gradient(135deg, #1a73e8 0%, #34a853 100%);
+        }
+        
+        .gradient-custom {
+            --gradient: linear-gradient(135deg, #9c27b0 0%, #ff6d00 100%);
+        }
+        
+        /* Animation pour les 4 blocs de modules */
+        .pack-card {
+            transition: all 0.4s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .pack-card .pack-content {
+            transition: all 0.4s ease;
+        }
+        
+        .pack-card .pack-details {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            padding: 0 24px;
+        }
+        
+        .pack-card:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        
+        /* Animation synchronisée pour les paires de blocs */
+        .pack-row:hover .pack-card .pack-details {
+            opacity: 1;
+            max-height: 200px;
+            padding: 16px 24px 24px 24px;
+        }
+        
+        .pack-row:hover .pack-card .gradient-card-content {
+            min-height: 280px;
+        }
+        
+        /* Progress steps modernes */
+        .progress-steps {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            border-radius: 50px;
+            color: #5f6368;
+            font-weight: 500;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            letter-spacing: -0.01em;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            background: linear-gradient(135deg, #1a73e8, #9c27b0);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .step.completed {
+            background: #34a853;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .step.active .step-number,
+        .step.completed .step-number {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .step-connector {
+            width: 80px;
+            height: 3px;
+            background: #e8eaed;
+            margin: 0 16px;
+            border-radius: 2px;
+        }
+        
+        /* Interface de chat améliorée avec zone de réponse plus grande */
+        .smart-input {
+            background: white;
+            border: 2px dashed #1a73e8;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+        }
+        
+        .smart-input:hover {
+            background: #f8f9ff;
+            border-color: #1b66c9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Zone de chat optimisée */
+        #chatHistory {
+            background: #fafbfc;
+            border-radius: 20px;
+            padding: 24px;
+            height: 480px;
+            overflow-y: auto;
+            margin-bottom: 24px;
+            border: 1px solid #e8eaed;
+        }
+        
+        /* Zone de saisie utilisateur agrandie */
+        #chatInput {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e8eaed;
+        }
+        
+        #userInput {
+            width: 100%;
+            min-height: 80px;
+            padding: 20px 24px;
+            border: 2px solid #e8eaed;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            resize: none;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+        
+        #userInput:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+            background: white;
+        }
+        
+        #userInput::placeholder {
+            color: #9aa0a6;
+            font-weight: 400;
+        }
+        
+        /* Messages de chat avec typographie Montserrat */
+        .chat-message {
+            max-width: 85%;
+            margin-bottom: 20px;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .chat-message.ai {
+            align-self: flex-start;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message-bubble {
+            padding: 16px 20px;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            word-wrap: break-word;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-bubble.ai {
+            background: white;
+            color: #202124;
+            border-bottom-left-radius: 6px;
+            border: 1px solid #e8eaed;
+        }
+
+        .message-bubble.user {
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5f6368;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.02em;
+        }
+
+        .message-header.ai {
+            justify-content: flex-start;
+        }
+
+        .message-header.user {
+            justify-content: flex-end;
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar.ai {
+            background: linear-gradient(135deg, #1a73e8, #9c27b0);
+            color: white;
+        }
+
+        .avatar.user {
+            background: linear-gradient(135deg, #34a853, #0d7377);
+            color: white;
+        }
+
+        /* Animation de typing améliorée */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 16px 20px;
+            background: white;
+            border: 1px solid #e8eaed;
+            border-radius: 20px;
+            border-bottom-left-radius: 6px;
+            max-width: fit-content;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #5f6368;
+            animation: typing 1.6s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            30% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Bouton d'envoi amélioré */
+        #sendButton {
+            min-height: 56px;
+            min-width: 56px;
+            border-radius: 16px;
+            margin-left: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        /* Notification moderne */
+        .notification {
+            position: fixed;
+            top: 32px;
+            right: 32px;
+            background: white;
+            color: #202124;
+            padding: 20px 28px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+            border-left: 5px solid #34a853;
+            max-width: 320px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.warning {
+            border-left-color: #ea4335;
+            color: #ea4335;
+        }
+
+        /* Titres avec Montserrat optimisé */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .text-4xl, .text-5xl, .text-6xl {
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        /* Scroll personnalisé */
+        #chatHistory::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #chatHistory::-webkit-scrollbar-track {
+            background: #f1f3f4;
+            border-radius: 4px;
+        }
+
+        #chatHistory::-webkit-scrollbar-thumb {
+            background: #dadce0;
+            border-radius: 4px;
+        }
+
+        #chatHistory::-webkit-scrollbar-thumb:hover {
+            background: #bdc1c6;
+        }
+        
+        @media (min-width: 768px) {
+            .cta-primary, .cta-outlined {
+                padding: 18px 36px;
+                font-size: 16px;
+            }
+            
+            #userInput {
+                min-height: 100px;
+                padding: 24px 28px;
+                font-size: 17px;
+            }
+        }
+        
+        /* Styles pour l'authentification utilisateur */
+        .auth-nav-btn {
+            position: relative;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 160px;
+            z-index: 1000;
+        }
+
+        .user-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu button:hover {
+            background-color: #f3f4f6;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #1b66c9;
+        }
+
+        @media (max-width: 768px) {
+            .progress-steps {
+                padding: 20px;
+            }
+            
+            .step {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+            
+            .step-connector {
+                display: none;
+            }
+            
+            .smart-input {
+                padding: 32px 20px;
+            }
+            
+            #chatHistory {
+                height: 360px;
+                padding: 20px;
+            }
+            
+            #userInput {
+                min-height: 70px;
+                padding: 18px 20px;
+                font-size: 16px;
+            }
+            
+            .chat-message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body class="font-montserrat bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    
+    <!-- Notification Toast -->
+    <div class="notification" id="notification">
+        <span id="notificationText">Message</span>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-5 md:px-10" style="padding-top: 0; padding-bottom: 0;">
+            <nav class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img src="votre-logo.png" alt="Studio Event" class="h-48 w-auto object-contain" style="max-width: 600px;">
+                </div>
+                <div class="hidden md:flex space-x-8 items-center nav-buttons">
+                    <button class="text-gray-700 hover:text-google-blue font-medium transition-colors" onclick="goBack()">← Retour</button>
+                    <button class="text-gray-700 hover:text-google-blue font-medium transition-colors">Aide</button>
+                    <div id="headerAuth">
+                        <button class="cta-primary" onclick="showAuthModal()">Se connecter</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="container mx-auto px-5 md:px-10 py-16">
+        
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <div class="step completed">
+                    <div class="step-number">✓</div>
+                    <span>Module sélectionné</span>
+                </div>
+                <div class="step-connector hidden md:block"></div>
+                <div class="step active">
+                    <div class="step-number">2</div>
+                    <span>Soumettre projet</span>
+                </div>
+                <div class="step-connector hidden md:block"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <span>Récupérer livrables</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section principale -->
+        <div class="max-w-5xl mx-auto">
+            <!-- Titre -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-6xl font-display font-bold text-gray-900 mb-6">
+                    Étape 2 : Soumettez votre projet
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto font-medium" id="projectSubtitle">
+                    Décrivez votre événement pour le module sélectionné
+                </p>
+            </div>
+
+            <!-- 4 blocs de modules -->
+            <div class="grid md:grid-cols-2 gap-6 mb-12">
+                <!-- Première ligne -->
+                <div class="pack-row md:col-span-2 grid md:grid-cols-2 gap-6">
+                    <div class="gradient-card gradient-operational pack-card">
+                        <div class="gradient-card-content">
+                            <div class="pack-content">
+                                <div class="mb-4">
+                                    <img src="pack-operationnel-logo.png" alt="Pack Opérationnel" class="w-12 h-12 mx-auto">
+                                </div>
+                                <h3 class="font-bold text-xl mb-3">Pack Opérationnel</h3>
+                                <p class="text-gray-600">Solutions prioritaires pour organiser efficacement</p>
+                            </div>
+                            <div class="pack-details">
+                                <div class="bg-white bg-opacity-80 rounded-lg p-4 mt-4">
+                                    <div class="space-y-3 text-sm font-medium text-gray-700">
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-orange-600 flex-shrink-0">1/</span>
+                                            <div>
+                                                <span class="font-semibold">Trouvez votre lieu</span> - Une sélection de lieux correspondant parfaitement à votre cahier des charges.
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-orange-600 flex-shrink-0">2/</span>
+                                            <div>
+                                                <span class="font-semibold">Trouvez votre animation</span> - Une sélection d'animations sur mesure.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="gradient-card gradient-concept pack-card">
+                        <div class="gradient-card-content">
+                            <div class="pack-content">
+                                <div class="mb-4">
+                                    <img src="pack-concept-logo.png" alt="Pack Concept" class="w-12 h-12 mx-auto">
+                                </div>
+                                <h3 class="font-bold text-xl mb-3">Pack Concept</h3>
+                                <p class="text-gray-600">Créativité et originalité pour un événement unique</p>
+                            </div>
+                            <div class="pack-details">
+                                <div class="bg-white bg-opacity-80 rounded-lg p-4 mt-4">
+                                    <div class="space-y-3 text-sm font-medium text-gray-700">
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-green-600 flex-shrink-0">1/</span>
+                                            <div>
+                                                <span class="font-semibold">Thématique créative</span> - Développement d'un concept original et mémorable pour votre événement.
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-green-600 flex-shrink-0">2/</span>
+                                            <div>
+                                                <span class="font-semibold">Design et ambiance</span> - Création d'une identité visuelle et d'une atmosphère unique.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Deuxième ligne -->
+                <div class="pack-row md:col-span-2 grid md:grid-cols-2 gap-6">
+                    <div class="gradient-card gradient-budget pack-card">
+                        <div class="gradient-card-content">
+                            <div class="pack-content">
+                                <div class="mb-4">
+                                    <img src="pack-budget-rse-logo.png" alt="Pack Budget/RSE" class="w-12 h-12 mx-auto">
+                                </div>
+                                <h3 class="font-bold text-xl mb-3">Pack Budget/RSE</h3>
+                                <p class="text-gray-600">Optimisation budgétaire et responsabilité sociale</p>
+                            </div>
+                            <div class="pack-details">
+                                <div class="bg-white bg-opacity-80 rounded-lg p-4 mt-4">
+                                    <div class="space-y-3 text-sm font-medium text-gray-700">
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-blue-600 flex-shrink-0">1/</span>
+                                            <div>
+                                                <span class="font-semibold">Optimisation budget</span> - Solutions pour maximiser l'impact de votre événement à budget maîtrisé.
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-blue-600 flex-shrink-0">2/</span>
+                                            <div>
+                                                <span class="font-semibold">Approche RSE</span> - Intégration de pratiques éco-responsables et durables.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="gradient-card gradient-custom pack-card">
+                        <div class="gradient-card-content">
+                            <div class="pack-content">
+                                <div class="mb-4">
+                                    <img src="pack-module-choix-logo.png" alt="Module de votre choix" class="w-12 h-12 mx-auto">
+                                </div>
+                                <h3 class="font-bold text-xl mb-3">Module de votre choix</h3>
+                                <p class="text-gray-600">Solution personnalisée selon vos besoins spécifiques</p>
+                            </div>
+                            <div class="pack-details">
+                                <div class="bg-white bg-opacity-80 rounded-lg p-4 mt-4">
+                                    <div class="space-y-3 text-sm font-medium text-gray-700">
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-purple-600 flex-shrink-0">1/</span>
+                                            <div>
+                                                <span class="font-semibold">Analyse personnalisée</span> - Étude approfondie de vos besoins spécifiques et contraintes.
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <span class="font-bold text-purple-600 flex-shrink-0">2/</span>
+                                            <div>
+                                                <span class="font-semibold">Solution sur-mesure</span> - Développement d'un module entièrement adapté à votre projet.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte principale de saisie -->
+            <div class="gradient-card gradient-project mb-8">
+                <div class="gradient-card-content">
+                    <div class="text-center mb-8">
+                        <div class="text-5xl mb-6">💬</div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+                            Parlez-nous de votre projet
+                        </h3>
+                        <p class="text-gray-600 mb-8 text-lg font-medium leading-relaxed">
+                            💡 Notre IA va vous poser quelques questions pour rédiger votre document<br>
+                            📎 Vous pouvez aussi déposer toute pièce complémentaire pour affiner votre livrable
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 items-center justify-center mb-8">
+                            <input type="file" id="fileUpload" style="display: none;" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload()">
+                            <button class="cta-outlined" onclick="document.getElementById('fileUpload').click()">
+                                📎 Déposer un document
+                            </button>
+                            <span id="fileName" class="text-google-green font-semibold text-lg"></span>
+                        </div>
+                    </div>
+
+                    <!-- Interface de chat -->
+                    <div id="chatInterface" class="">
+                        <!-- Zone de conversation -->
+                        <div id="chatHistory" class="flex flex-col space-y-6">
+                            <!-- Les messages apparaîtront ici -->
+                        </div>
+
+                        <!-- Zone de saisie agrandie -->
+                        <div id="chatInput" class="flex gap-4 items-end">
+                            <div class="flex-1">
+                                <textarea 
+                                    id="userInput" 
+                                    placeholder="Décrivez votre projet en détail... Plus vous donnez d'informations, plus notre IA pourra vous aider efficacement !"
+                                    rows="4"
+                                    onkeypress="handleKeyPress(event)"
+                                ></textarea>
+                            </div>
+                            <button 
+                                onclick="sendMessage()" 
+                                class="cta-primary"
+                                id="sendButton"
+                            >
+                                ➤
+                            </button>
+                        </div>
+
+                        <!-- Bouton pour terminer -->
+                        <div class="text-center mt-8 hidden" id="finishSection">
+                            <button class="cta-primary text-lg" onclick="finishConversation()">
+                                ✅ Terminer et analyser
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="text-center">
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <button class="cta-outlined text-lg" onclick="goBack()">
+                        ← Retour
+                    </button>
+                    <button class="cta-primary text-lg" onclick="generateResult()" id="analyseButton">
+                        🔮 Analyser avec l'IA
+                    </button>
+                </div>
+                <p class="text-gray-500 text-sm mt-4 max-w-lg mx-auto">
+                    💡 Tip: Utilisez d'abord l'assistant IA ci-dessus pour améliorer votre cahier des charges existant
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-5 md:px-10 text-center">
+            <p class="text-gray-400 font-medium text-lg">
+                Studio Event - La solution IA clé en main pour créer vos événements
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Variables de conversation avec l'agent Chef de Projet (mode amélioration)
+        let conversationHistory = [];
+        let isWaitingForResponse = false;
+        let sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        let userProfile = {};
+        let hasStarted = false;
+        let existingBrief = '';
+        let currentUser = null;
+
+        // Fonction pour obtenir l'utilisateur actuel
+        function getCurrentUser() {
+            return currentUser;
+        }
+
+        // Initialiser Firebase Auth si disponible
+        function initAuth() {
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                firebase.auth().onAuthStateChanged((user) => {
+                    currentUser = user;
+                    if (user) {
+                        console.log('Utilisateur connecté:', user.uid);
+                    } else {
+                        console.log('Utilisateur anonyme');
+                        currentUser = { uid: 'anonymous_' + sessionId };
+                    }
+                });
+            } else {
+                // Fallback pour utilisateur anonyme
+                currentUser = { uid: 'anonymous_' + sessionId };
+                console.log('Firebase non disponible, utilisateur anonyme créé');
+            }
+        }
+
+        // Fonctions de conversation avec l'agent Chef de Projet (mode amélioration)
+        function startConversation() {
+            if (!hasStarted) {
+                hasStarted = true;
+                // Message d'accueil du Chef de Projet pour le mode amélioration
+                setTimeout(() => {
+                    addMessage("👋 Bonjour ! Je suis votre chef de projet événementiel expert. Je vais vous aider à améliorer et optimiser votre cahier des charges existant.\n\nje vais analyser votre brief actuel et vous proposer des améliorations concrètes, ainsi que les packs et agents les plus adaptés pour maximiser votre ROI.\n\nPour commencer, pouvez-vous me partager votre cahier des charges actuel ou me décrire les éléments que vous avez déjà définis ?", 'ai');
+                    document.getElementById('userInput').placeholder = "Collez votre cahier des charges ou décrivez les éléments déjà définis...";
+                    document.getElementById('userInput').focus();
+                    isWaitingForResponse = false; // Permettre à l'utilisateur de répondre
+                }, 1000);
+            }
+        }
+
+        async function sendMessage() {
+            console.log('🔄 sendMessage() appelée (mode amélioration)');
+            
+            const input = document.getElementById('userInput');
+            if (!input) {
+                console.error('❌ Element userInput non trouvé');
+                return;
+            }
+            
+            const message = input.value.trim();
+            console.log('📝 Message à envoyer:', message);
+            console.log('⚠️ isWaitingForResponse:', isWaitingForResponse);
+            
+            if (!message) {
+                console.log('❌ Message vide, arrêt');
+                return;
+            }
+            
+            if (isWaitingForResponse) {
+                console.log('❌ En attente de réponse, arrêt');
+                return;
+            }
+            
+            // S'assurer que l'utilisateur est initialisé
+            if (!currentUser) {
+                currentUser = { uid: 'anonymous_' + sessionId };
+            }
+            
+            // Ajouter le message de l'utilisateur
+            addMessage(message, 'user');
+            conversationHistory.push({
+                role: 'user',
+                content: message,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Stocker le premier message comme cahier des charges existant s'il n'est pas encore défini
+            if (!existingBrief && conversationHistory.length === 1) {
+                existingBrief = message;
+            }
+            
+            // Réinitialiser l'input et désactiver temporairement
+            input.value = '';
+            isWaitingForResponse = true;
+            
+            // Afficher l'indicateur de typing
+            showTypingIndicator();
+            
+            try {
+                // Appel à l'API Chef de Projet en mode amélioration
+                console.log('Envoi du message à l\'API Chef de Projet (mode amélioration)...', {
+                    message: message,
+                    userId: currentUser.uid,
+                    sessionId: sessionId,
+                    existingBrief: existingBrief ? 'Présent' : 'Non défini'
+                });
+                
+                // Timeout manuel compatible tous navigateurs
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 secondes
+                
+                const response = await fetch('/api/chef-projet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        message: message,
+                        mode: 'amelioration',
+                        existingBrief: existingBrief,
+                        conversationHistory: conversationHistory,
+                        userProfile: userProfile,
+                        userId: currentUser.uid,
+                        sessionId: sessionId
+                    })
+                });
+                
+                clearTimeout(timeoutId);
+
+                const result = await response.json();
+                console.log('📦 Réponse API complète:', result);
+                
+                hideTypingIndicator();
+                
+                if (result.success && result.response) {
+                    // Ajouter la réponse de l'agent du vrai modèle Claude
+                    const aiMessage = result.response.content || result.response;
+                    addMessage(aiMessage, 'ai');
+                    
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: aiMessage,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // Afficher les recommandations si disponibles (structure différente)
+                    if (result.response.briefElements && Array.isArray(result.response.briefElements) && result.response.briefElements.length > 0) {
+                        // Traitement des éléments de brief si disponibles
+                        console.log('📋 Éléments de brief identifiés:', result.response.briefElements);
+                    }
+                    
+                } else {
+                    console.error('❌ result.success = false, détails:', result);
+                    addMessage("❌ Désolé, une erreur s'est produite. Pouvez-vous reformuler votre demande ? (Détails dans la console)", 'ai');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erreur lors de l\'appel à l\'API:', error);
+                hideTypingIndicator();
+                
+                if (error.name === 'AbortError') {
+                    addMessage("⏱️ La demande a pris trop de temps. L'IA analyse votre demande en profondeur, veuillez patienter et réessayer.", 'ai');
+                } else if (error.message.includes('Failed to fetch')) {
+                    addMessage("🔌 Problème de connexion au serveur. Vérifiez que le serveur est démarré sur localhost:3000.", 'ai');
+                } else {
+                    addMessage("❌ Erreur inattendue: " + error.message + ". Veuillez réessayer.", 'ai');
+                }
+            } finally {
+                // S'assurer que l'état est toujours réinitialisé
+                isWaitingForResponse = false;
+                document.getElementById('userInput').focus();
+            }
+        }
+
+        // Fonction de test pour le bouton d'envoi
+        function testSendButton() {
+            console.log('🧪 Test du bouton d\'envoi (step3)');
+            console.log('📍 isWaitingForResponse:', isWaitingForResponse);
+            console.log('👤 currentUser:', currentUser);
+            console.log('🆔 sessionId:', sessionId);
+            console.log('📋 existingBrief:', existingBrief ? 'Présent' : 'Non défini');
+            
+            const input = document.getElementById('userInput');
+            if (input) {
+                console.log('✅ Input trouvé, valeur:', input.value);
+            } else {
+                console.error('❌ Input non trouvé');
+            }
+            
+            const button = document.getElementById('sendButton');
+            if (button) {
+                console.log('✅ Bouton trouvé');
+            } else {
+                console.error('❌ Bouton non trouvé');
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function addMessage(text, sender) {
+            const chatHistory = document.getElementById('chatHistory');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+            
+            const messageHeader = document.createElement('div');
+            messageHeader.className = `message-header ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${sender}`;
+            avatar.textContent = sender === 'ai' ? '🤖' : '👤';
+            
+            const name = document.createElement('span');
+            name.textContent = sender === 'ai' ? 'Assistant IA' : 'Vous';
+            
+            if (sender === 'ai') {
+                messageHeader.appendChild(avatar);
+                messageHeader.appendChild(name);
+            } else {
+                messageHeader.appendChild(name);
+                messageHeader.appendChild(avatar);
+            }
+            
+            const messageBubble = document.createElement('div');
+            messageBubble.className = `message-bubble ${sender}`;
+            messageBubble.textContent = text;
+            
+            messageDiv.appendChild(messageHeader);
+            messageDiv.appendChild(messageBubble);
+            
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatHistory = document.getElementById('chatHistory');
+            
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message ai';
+            typingDiv.id = 'typingIndicator';
+            
+            const messageHeader = document.createElement('div');
+            messageHeader.className = 'message-header ai';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar ai';
+            avatar.textContent = '🤖';
+            
+            const name = document.createElement('span');
+            name.textContent = 'Assistant IA';
+            
+            messageHeader.appendChild(avatar);
+            messageHeader.appendChild(name);
+            
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                typingIndicator.appendChild(dot);
+            }
+            
+            typingDiv.appendChild(messageHeader);
+            typingDiv.appendChild(typingIndicator);
+            
+            chatHistory.appendChild(typingDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // Fonction pour afficher les recommandations d'agents et packs
+        function showRecommendations(packs, agents) {
+            if (packs.length === 0 && agents.length === 0) return;
+            
+            let recommendationsHtml = '<div class="recommendations-panel mt-6 p-4 bg-green-50 rounded-lg border-2 border-green-200">';
+            recommendationsHtml += '<h4 class="font-bold text-green-800 mb-3">💡 Recommandations d\'amélioration</h4>';
+            
+            if (packs.length > 0) {
+                recommendationsHtml += '<div class="mb-3"><strong class="text-green-700">Packs recommandés :</strong><ul class="list-disc list-inside ml-2">';
+                packs.forEach(pack => {
+                    recommendationsHtml += `<li class="text-green-600">${pack}</li>`;
+                });
+                recommendationsHtml += '</ul></div>';
+            }
+            
+            if (agents.length > 0) {
+                recommendationsHtml += '<div class="mb-3"><strong class="text-green-700">Agents spécialisés :</strong><ul class="list-disc list-inside ml-2">';
+                agents.forEach(agent => {
+                    recommendationsHtml += `<li class="text-green-600">${agent}</li>`;
+                });
+                recommendationsHtml += '</ul></div>';
+            }
+            
+            recommendationsHtml += '</div>';
+            
+            // Ajouter les recommandations après le dernier message
+            const chatHistory = document.getElementById('chatHistory');
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = recommendationsHtml;
+            chatHistory.appendChild(tempDiv.firstChild);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function finishConversation() {
+            // Compiler l'historique de conversation avec le brief existant
+            let compiledDescription = "Amélioration de cahier des charges avec Chef de Projet :\n\n";
+            compiledDescription += "BRIEF INITIAL :\n" + existingBrief + "\n\n";
+            compiledDescription += "CONVERSATION D'AMÉLIORATION :\n\n";
+            
+            conversationHistory.forEach((msg, index) => {
+                const role = msg.role === 'user' ? 'CLIENT' : 'CHEF DE PROJET';
+                compiledDescription += `${role} : ${msg.content}\n\n`;
+            });
+            
+            // Stocker dans une variable globale
+            window.projectDescription = compiledDescription;
+            
+            showNotification("✅ Amélioration terminée ! Analyse finale en cours...");
+            
+            // Procéder à l'analyse
+            setTimeout(() => {
+                generateResult();
+            }, 1200);
+        }
+
+        // Fonctions utilitaires existantes
+        function handleFileUpload() {
+            const fileInput = document.getElementById('fileUpload');
+            const file = fileInput.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = `📎 ${file.name}`;
+                showNotification("Document ajouté ! Analyse automatique du document...");
+            }
+        }
+
+        function generateResult() {
+            console.log('🔮 generateResult() called - step3');
+            // Get description from multiple sources
+            let description = window.projectDescription || '';
+            
+            // If no stored description, try to capture from conversation history
+            if (!description.trim() && conversationHistory && conversationHistory.length > 0) {
+                description = "Amélioration de cahier des charges avec Chef de Projet :\n\n";
+                if (existingBrief) {
+                    description += "BRIEF INITIAL :\n" + existingBrief + "\n\n";
+                }
+                description += "CONVERSATION D'AMÉLIORATION :\n\n";
+                conversationHistory.forEach((msg, index) => {
+                    const role = msg.role === 'user' ? 'CLIENT' : 'CHEF DE PROJET';
+                    description += `${role} : ${msg.content}\n\n`;
+                });
+                window.projectDescription = description;
+                console.log('✅ Données de conversation capturées automatiquement');
+                showNotification("📝 Données de conversation récupérées !");
+            }
+            
+            // Fallback to current user input
+            if (!description.trim()) {
+                const userInput = document.getElementById('userInput');
+                if (userInput && userInput.value.trim()) {
+                    description = "Description du projet: " + userInput.value.trim();
+                    window.projectDescription = description;
+                    console.log('✅ Données récupérées depuis le champ de saisie');
+                }
+            }
+            
+            // Final validation
+            if (!description.trim()) {
+                showNotification("⚠️ Veuillez d'abord discuter avec l'assistant IA ou saisir une description de votre projet", "warning");
+                const userInput = document.getElementById('userInput');
+                if (userInput) {
+                    userInput.focus();
+                    userInput.placeholder = "Décrivez votre projet en quelques lignes pour continuer...";
+                }
+                return;
+            }
+            
+            showNotification("✅ Projet soumis ! Analyse IA en cours...");
+            
+            console.log('Description du projet:', description);
+            
+            // Simulation d'envoi
+            setTimeout(() => {
+                showNotification("🔮 Analyse terminée ! Redirection vers les résultats...");
+                // Redirection vers la page de résultats
+                setTimeout(() => {
+                    window.location.href = 'studio-evento-results.html';
+                }, 1000);
+            }, 2500);
+        }
+
+        function goBack() {
+            window.location.href = 'studio-evento.html';
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = 'notification show';
+            
+            if (type === 'warning') {
+                notification.classList.add('warning');
+            }
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.remove('warning');
+                }, 400);
+            }, 4000);
+        }
+
+        // Widget de feedback utilisateur pour step3
+        function showFeedbackWidget() {
+            if (document.getElementById('feedbackWidget')) return;
+            
+            const feedbackHTML = `
+                <div id="feedbackWidget" class="fixed bottom-4 right-4 z-50">
+                    <div id="feedbackButton" class="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-105 cursor-pointer" onclick="openFeedbackModal()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 4v-4z" />
+                        </svg>
+                    </div>
+                    
+                    <div id="feedbackModal" class="hidden bg-white rounded-lg shadow-xl border max-w-sm w-80 mb-4">
+                        <div class="bg-gradient-to-r from-purple-500 to-pink-600 p-4 rounded-t-lg">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-white font-semibold">Amélioration réussie ?</h3>
+                                <button onclick="closeFeedbackModal()" class="text-white hover:text-gray-200 transition-colors">×</button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <p class="text-gray-700 text-sm mb-4">Le Chef de Projet a-t-il bien amélioré votre cahier des charges ?</p>
+                            
+                            <div class="flex justify-between items-center space-x-2 mb-4">
+                                <button onclick="submitQuickFeedback(1)" class="text-2xl hover:scale-110 transition-transform">😞</button>
+                                <button onclick="submitQuickFeedback(2)" class="text-2xl hover:scale-110 transition-transform">😕</button>
+                                <button onclick="submitQuickFeedback(3)" class="text-2xl hover:scale-110 transition-transform">😐</button>
+                                <button onclick="submitQuickFeedback(4)" class="text-2xl hover:scale-110 transition-transform">😊</button>
+                                <button onclick="submitQuickFeedback(5)" class="text-2xl hover:scale-110 transition-transform">🤩</button>
+                            </div>
+                            
+                            <textarea id="quickComment" placeholder="Commentaire optionnel..." class="w-full p-2 border border-gray-300 rounded text-sm" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', feedbackHTML);
+        }
+
+        function openFeedbackModal() {
+            document.getElementById('feedbackModal').classList.remove('hidden');
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedbackModal').classList.add('hidden');
+        }
+
+        async function submitQuickFeedback(rating) {
+            const comment = document.getElementById('quickComment').value;
+            
+            try {
+                await fetch('/api/chef-projet/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        feedback: {
+                            rating: rating,
+                            category: 'accuracy',
+                            comment: comment || undefined,
+                            recommendationAccepted: rating >= 4
+                        },
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                // Remplacer le contenu par un message de remerciement
+                document.getElementById('feedbackModal').innerHTML = 
+                    '<div class="p-6 text-center"><div class="text-4xl mb-2">✨</div><p class="text-green-600 font-medium">Merci !</p></div>';
+                
+                setTimeout(closeFeedbackModal, 2000);
+            } catch (error) {
+                console.error('Erreur feedback:', error);
+            }
+        }
+
+        // Test function to verify button functionality
+        function testButtonClick() {
+            console.log('🧪 Testing button click functionality...');
+            const button = document.getElementById('analyseButton');
+            if (button) {
+                console.log('✅ Button found:', button);
+                console.log('✅ Button onclick:', button.onclick);
+                console.log('✅ Button attributes:', {
+                    id: button.id,
+                    className: button.className,
+                    onclick: button.getAttribute('onclick')
+                });
+            } else {
+                console.error('❌ Button not found');
+            }
+        }
+
+        // Fonctions d'authentification
+        window.signOut = function() {
+            if (window.firebase && window.firebase.auth()) {
+                window.firebase.auth().signOut().then(() => {
+                    console.log('Utilisateur déconnecté');
+                }).catch((error) => {
+                    console.error('Erreur lors de la déconnexion:', error);
+                });
+            }
+        };
+
+        window.toggleUserMenu = function() {
+            const menu = document.getElementById('userMenu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            }
+        };
+
+        window.showPage = function(pageName) {
+            if (pageName === 'dashboard') {
+                console.log('Redirection vers le dashboard utilisateur');
+            } else if (pageName === 'home') {
+                window.location.href = 'studio-evento.html';
+            }
+        };
+
+        window.startFreeTrial = function() {
+            if (isUserAuthenticated()) {
+                console.log('Utilisateur déjà authentifié');
+            } else {
+                showAuthModal();
+            }
+        };
+
+        // Initialisation avec démarrage automatique de la conversation avec Chef de Projet (mode amélioration)
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📝 Page Étape 3 - Chef de Projet (Amélioration) initialisé');
+            
+            // Initialiser l'authentification
+            initAuth();
+            
+            // Test button functionality
+            setTimeout(() => {
+                testButtonClick();
+            }, 500);
+            
+            // Afficher le widget de feedback après 30 secondes
+            setTimeout(() => {
+                showFeedbackWidget();
+            }, 30000);
+            
+            // Démarrer automatiquement la conversation avec le Chef de Projet
+            setTimeout(() => {
+                startConversation();
+                // Test du bouton après initialisation
+                setTimeout(() => {
+                    testSendButton();
+                }, 2000);
+            }, 1000);
+        });
+    </script>
+
+    <!-- Firebase Auth -->
+    <script src="firebase-auth.js"></script>
+</body>
+</html>
