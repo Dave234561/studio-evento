@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export const runtime = 'nodejs'
+export const runtime = 'nodejs18.x'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
