@@ -15,7 +15,7 @@ const nextConfig = {
   assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
   
   // Configuration pour la génération statique
-  output: 'standalone',
+  // output: 'standalone', // Désactivé temporairement pour Vercel
   
   // Rewrites pour les routes personnalisées
   async rewrites() {

@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     try {
       if (type === 'pdf') {
         const pdfBuffer = await generatePDF(content);
-        return new NextResponse(pdfBuffer, {
+        return new NextResponse(pdfBuffer as unknown as ArrayBuffer, {
           headers: {
             'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename="${filename}"`,
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         });
       } else if (type === 'docx') {
         const docxBuffer = await generateDOCX(content);
-        return new NextResponse(docxBuffer, {
+        return new NextResponse(docxBuffer as unknown as ArrayBuffer, {
           headers: {
             'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'Content-Disposition': `attachment; filename="${filename}"`,

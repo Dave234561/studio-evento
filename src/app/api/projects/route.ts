@@ -3,9 +3,12 @@ import { z } from 'zod'
 import prisma from '@/lib/prisma'
 import { generateId } from '@/lib/utils'
 
-// Configuration pour Vercel/Next.js build
+// Configuration pour Vercel/Next.js build - Force mode dynamique
 export const dynamic = 'force-dynamic'
 export const fetchCache = 'force-no-store'
+export const revalidate = false
+export const dynamicParams = true
+export const runtime = 'nodejs'
 
 const createProjectSchema = z.object({
   title: z.string().min(1).max(200),
@@ -27,6 +30,11 @@ const updateProjectSchema = createProjectSchema.partial().extend({
 
 export async function GET(request: NextRequest) {
   try {
+    // Éviter les appels Prisma pendant le build
+    if (process.env.NODE_ENV !== 'production' && !request.url) {
+      return NextResponse.json({ error: 'Build time - no database access' })
+    }
+    
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
     const projectId = searchParams.get('projectId')
